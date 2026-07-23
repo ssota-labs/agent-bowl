@@ -1,0 +1,6 @@
+{
+  "title": "개발",
+  "pages": ["plans", "adr"],
+  "collapsible": true,
+  "defaultOpen": false
+}

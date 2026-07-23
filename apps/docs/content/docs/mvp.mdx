@@ -1,0 +1,92 @@
+---
+title: MVP
+description: agent-bowl 플랫폼의 단계별 범위와 수락 기준
+type: guide
+summary: GitHub 색인, exact lock, CLI 조합, 한 host adapter, 간단한 web registry.
+---
+
+
+이 계획은 `agent-bowl` 플랫폼만 다룬다. 단계 이름, schema field, CLI 명령은 구현 전에 검증할 잠정안이며 확정 계약이 아니다. 일정 추정은 포함하지 않는다.
+
+## 목표
+
+GitHub source에 있는 독립 Package를 색인하고, 사용자가 Package component를 골라 App manifest를 만들고, exact source lock을 검토한 뒤 한 host에 설치·갱신할 수 있는 가장 작은 흐름을 만든다.
+
+투자 리서치 구성은 [manifest 예시](examples/investor-research)로만 사용한다. DART, media, 투자 방법론 Package 자체는 이 저장소에서 만들지 않는다.
+
+## 단계
+
+### 1. Source와 schema 기반
+
+- GitHub repository와 source path를 기준으로 Package metadata를 읽는다.
+- Package와 App schema 초안을 정의하고 validation 결과를 제공한다.
+- 초기 Package 종류로 skill, instruction, UI component, CLI, MCP server, scaffold recipe, verification asset을 지원한다.
+- Requested ref를 resolved commit으로 고정하고 component closure hash를 lock에 기록한다.
+- License와 permission 선언이 없을 때의 실패 또는 경고 policy를 정한다.
+
+### 2. CLI 조합과 설치
+
+- Package 검색, 상세 조회, component 선택, App composition 흐름을 제공한다.
+- Manifest에서 dependency closure를 해석하고 lock 후보와 차이를 보여준다.
+- 한 host adapter를 정해 native output을 materialize한다.
+- Install receipt와 provenance를 기록하고 verify와 uninstall에 사용한다.
+- Update 전에 source, dependency, license, permission diff를 보여준다.
+- Content-addressed cache를 도입하되 source identity와 lock을 대신하지 않게 한다.
+
+CLI 명령 이름은 사용성 검토 뒤 정한다. 이 문서의 “검색”, “설치”, “검증”은 기능을 뜻하며 command contract가 아니다.
+
+### 3. 간단한 Web registry
+
+- Public Package와 App metadata를 browse하고 search한다.
+- Source, export, dependency graph, compatibility, license, permission을 보여준다.
+- UI primitive와 block은 격리된 정적 preview 또는 안전한 catalog view를 제공한다.
+- Composer에서 선택한 component로 manifest 초안을 만들고 CLI로 넘길 수 있게 한다.
+- 검증 상태와 upstream maintainer 정보를 안전 보증과 구분해 표시한다.
+
+### 4. Host와 운영 범위 확장
+
+- 첫 adapter에서 얻은 capability model을 바탕으로 Cursor, Claude Code, Codex adapter 후보를 늘린다.
+- Personal, public, team registry의 visibility와 policy 차이를 구체화한다.
+- Cloud execution에 앞서 manifest/lock parity, secret boundary, scheduler와 worker interface를 설계한다.
+
+이 단계는 MVP 완료 조건이 아니라 후속 방향이다.
+
+## 수락 기준
+
+- GitHub canonical URL과 source path가 다른 동명 Package를 별개로 식별한다.
+- Package가 export한 component와 그 closure를 조회할 수 있다.
+- App manifest가 여러 독립 Package를 참조하며 Package 내용을 vendoring하지 않는다.
+- 같은 lock이 canonical URL, requested ref, resolved commit, source path, closure hash를 재현한다.
+- 한 host adapter가 native output을 만들고 unsupported capability를 명시적으로 보고한다.
+- 설치 전 direct 및 transitive permission과 license를 볼 수 있다.
+- Update에서 source, dependency, permission 차이를 확인하며 executable capability 증가에는 새 승인이 필요하다.
+- Receipt로 실제 설치 경로와 materialized hash를 검증하고 pack-managed artifact를 제거할 수 있다.
+- Scaffold로 생성한 뒤 편집된 사용자 파일을 update가 자동으로 덮어쓰지 않는다.
+- 간단한 Web registry에서 Package와 App을 구분해 검색하고 dependency/source 정보를 볼 수 있다.
+- 투자 리서치 예시는 구현 Package가 아니라 App manifest 예시로 표시된다.
+
+## 명시적 비목표
+
+- 이 저장소에서 DART/OpenDART, media 분석, 투자 분석 Package를 구현하지 않는다.
+- Upstream Package artifact를 대신 hosting하거나 장기 보관하지 않는다.
+- 모든 host와 runtime을 한 번에 지원하지 않는다.
+- 범용 cloud agent execution platform을 MVP에 포함하지 않는다.
+- 검토 없는 silent auto-update를 제공하지 않는다.
+- 모든 license 조합의 법률 적합성을 자동 판정하지 않는다.
+- Model과 외부 API까지 포함한 bit-for-bit 실행 재현성을 약속하지 않는다.
+
+## 미결정 사항
+
+- Package metadata를 upstream repository에 두는 방식과 registry-side annotation의 경계
+- Canonical URL 정규화와 repository 이전 처리
+- Monorepo 안 Package와 component identity 표현
+- Semantic version, tag, commit, branch 요청을 허용하는 범위
+- Closure hash의 정규화 규칙과 large asset 처리
+- Permission vocabulary와 host별 강제 가능 수준
+- 첫 host adapter 선정 기준
+- Private GitHub source의 credential과 cache 격리
+- Registry moderation, maintainer verification, 서명과 transparency log 도입 순서
+- Generated code migration format과 three-way merge base 보관 방식
+- Cache retention과 upstream 소실 시 합법적 복구 범위
+
+관련 보안 조건은 [보안과 출처 증명](security-and-provenance), 플랫폼 기능은 [레지스트리와 플랫폼](registry-platform)을 참고한다.

@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* React Flow ships its own stylesheet; the canvas blocks are unusable without it. */
+@import '@xyflow/react/dist/style.css';
+
+@source '../content/**/*.mdx';
+@source '../components/**/*.tsx';
+
+/*
+ * Sidebar scroll.
+ *
+ * Radix ScrollArea keeps overflow-y:hidden on the viewport until its scrollbar
+ * effect runs (scrollbarYEnabled). In Cursor's browser preview that often
+ * never flips to scroll, so the nav is clipped with no wheel scrolling.
+ *
+ * Force the viewport to scroll, and also allow the flex-1 ScrollArea root to
+ * scroll as a fallback when the viewport height grows with content.
+ */
+#nd-sidebar > .overflow-hidden.min-h-0.flex-1,
+#nd-sidebar-mobile > .overflow-hidden.min-h-0.flex-1,
+#nd-sidebar > [data-radix-scroll-area-root],
+#nd-sidebar-mobile > [data-radix-scroll-area-root] {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+#nd-sidebar [data-radix-scroll-area-viewport],
+#nd-sidebar-mobile [data-radix-scroll-area-viewport] {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}

@@ -1,0 +1,88 @@
+---
+title: 패키지 모델
+description: Package 종류, export, closure, source identity, 소유권과 갱신
+type: reference
+summary: 독립 upstream의 출처·권한·라이선스를 유지한 채 component를 export한다.
+---
+
+
+Package는 독립된 upstream source와 version lifecycle을 가진다. 레지스트리에 등록되더라도 유지관리 권한과 원본은 upstream에 남는다. 아래 구조와 이름은 설계 후보이며 확정 schema가 아니다.
+
+## Package 종류
+
+초기 분류 후보는 다음과 같다.
+
+- skill, agent, instruction
+- host-native plugin
+- UI primitive, UI block
+- CLI tool
+- MCP server
+- code template
+- scaffold 또는 starter recipe
+- dashboard 또는 studio
+- runtime 또는 engine
+- test, evaluator, policy 같은 verification asset
+
+한 Package가 여러 종류의 component를 export할 수 있다. 종류는 검토와 설치 전략을 돕는 metadata이지 Package의 크기를 제한하는 규칙이 아니다.
+
+## Export와 component closure
+
+Package export는 선택 가능한 component의 이름, 종류, source path, entry point, compatibility, dependency, permission을 기술한다. component closure에는 그 component가 참조하는 다음 자료가 모두 들어간다.
+
+- script와 executable
+- instruction이 읽는 reference
+- scaffold template과 patch recipe
+- UI asset, style, font
+- test fixture와 verification rule
+
+resolver는 source root 밖 경로, 확인되지 않은 remote include, 선언되지 않은 실행 파일을 자동으로 따라가지 않는다. 지원하지 않는 외부 참조가 있으면 설치 가능한 것처럼 축소하지 않고 실패한다. closure hash는 선택된 입력 집합을, materialized hash는 adapter가 실제로 만든 결과를 구분해 기록한다.
+
+## Source identity
+
+각 선택 항목은 적어도 다음 사실과 연결되어야 한다.
+
+| 항목 | 의미 |
+|---|---|
+| canonical URL | upstream source의 정규 위치 |
+| requested ref | 사용자가 요청한 tag, branch, commit 또는 범위 |
+| resolved commit | resolver가 고정한 immutable revision |
+| source path | source 안에서 component가 시작되는 위치 |
+| closure hash | component와 참조 자료 전체의 hash |
+| materialized hash | target host에 설치된 결과의 hash |
+| license | upstream이 선언한 적용 조건 |
+| permissions | 실행, 파일, network, secret 접근 요구 |
+
+표시 이름이나 registry slug만으로 이 항목들을 대신할 수 없다.
+
+## 소유권과 갱신 전략
+
+artifact마다 소유권이 다르므로 update도 달라야 한다.
+
+| 모드 | 소유권 | update 원칙 |
+|---|---|---|
+| pack-managed replace | Package | 변경되지 않은 관리 파일을 새 closure로 교체 |
+| package-manager update | 외부 package manager | 해당 manager의 lock과 lifecycle 사용 |
+| generated user-owned code | 사용자 | migration 또는 three-way merge 제안, 편집 내용 보존 |
+| deployed service | 배포 대상 | 새 revision을 deploy하고 상태 확인 |
+| secret/config preserve | 사용자 또는 machine | 값은 보존하고 schema나 요구 조건만 검토 |
+
+Scaffold는 파일을 생성한 뒤 사용자가 편집할 수 있다는 전제를 둔다. 이후 update가 생성물을 무조건 덮어써서는 안 된다. base provenance가 있으면 three-way merge나 명시적 migration을 시도하고, 없으면 충돌을 보고한 뒤 멈춘다.
+
+## 호환성, 권한, 의존성
+
+Package metadata는 지원 host와 version, 운영체제나 runtime 조건, 필요한 adapter capability를 표현해야 한다. resolver는 component dependency와 peer 관계, 충돌, 순환 참조를 확인한다. host가 일부 기능을 표현할 수 없으면 adapter가 capability gap을 반환한다.
+
+권한은 가능한 한 구체적으로 선언한다.
+
+- hook 또는 executable script 실행
+- filesystem read/write 범위
+- process 실행
+- MCP server 시작 또는 접속
+- network endpoint와 domain
+- secret 이름과 전달 범위
+
+update에서 권한이나 실행 능력이 늘면 이전 승인을 이어 쓰지 않는다. 자세한 검토 규칙은 [보안과 출처 증명](security-and-provenance)에 둔다.
+
+## First-party와 upstream 참조
+
+`agent-bowl`이 직접 유지하는 schema, resolver, adapter는 first-party가 될 수 있다. 반면 색인된 skill, component library, framework, CLI, MCP는 각각의 upstream Package다. registry metadata를 보완하거나 호환성 검사를 제공해도 원본 Package를 first-party로 표기하지 않는다. 수정본이 필요하다면 fork의 canonical URL과 책임 주체를 별도로 드러낸다.

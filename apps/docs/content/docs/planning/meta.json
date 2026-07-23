@@ -1,0 +1,6 @@
+{
+  "title": "기획",
+  "pages": ["prds", "stories"],
+  "collapsible": true,
+  "defaultOpen": false
+}

@@ -1,0 +1,58 @@
+---
+title: 투자 리서치 App
+description: 독립 Package를 조합한 App 구성 예시
+type: overview
+summary: 이 저장소가 구현하는 App이 아니라 조합 모델의 예시이다.
+---
+
+
+> 이 문서는 `agent-bowl`의 조합 모델을 설명하기 위한 예시다. 이 저장소가 투자 분석 App, DART 연동, media 분석 도구, 투자 방법론을 구현한다는 뜻이 아니다. 아래 이름과 구성은 잠정 예시이며 실제 Package나 확정 schema를 가리키지 않는다.
+
+## App 구성 예시
+
+투자 리서치 App은 다음과 같은 독립 Package를 manifest에서 조합할 수 있다.
+
+| 독립 Package 역할 | Component 예시 | 소유와 갱신 |
+|---|---|---|
+| chart UI primitive | 축, tooltip, 범례, 시계열 chart wrapper | UI upstream이 관리 |
+| finance UI block | 실적 추이, valuation 비교, event timeline | 별도 block Package가 관리 |
+| media analysis | YouTube 검색·metadata 수집, transcript와 frame 처리 | media tool upstream이 관리 |
+| filing analysis | DART/OpenDART 응답 parsing과 normalized schema | 공시 도구 upstream이 관리 |
+| methodology skill | 기업·산업 분석 기준, 근거와 반증 점검 | 방법론 maintainer가 관리 |
+| analyst workflow | 기본 분석, 심층 분석, sector 분석, daily tracker | workflow Package가 관리 |
+| dashboard scaffold | MDX 기반 문서 shell과 제한된 rich component catalog | scaffold upstream이 관리 |
+| verification asset | source citation, stale data, calculation 검사 | 검증 Package가 관리 |
+
+App은 이 Package들을 복사해 하나의 framework로 재출판하지 않는다. Manifest가 원하는 component와 policy를 표현하고 lock이 각 canonical URL, source path, resolved commit, closure를 고정한다.
+
+## 가능한 사용자 흐름
+
+### 기업 기본 분석
+
+기업 식별자와 기준일을 입력하면 공시, 가격, 주요 지표, 최근 media source를 수집한다. 방법론 skill이 사업 구조, 재무 요약, 주요 위험, 확인이 필요한 빈칸을 정리한다. Dashboard block은 normalized data만 받아 출처와 함께 보여준다.
+
+### 기업 심층 분석
+
+여러 기간의 공시와 event를 비교하고 주장별 근거를 연결한다. Transcript나 video frame이 필요하면 media Package의 policy와 source 이용 조건을 먼저 확인한다. 분석 결과에는 사실, 계산, 해석, 미확인 항목을 구분한다.
+
+### 산업 또는 sector 분석
+
+기업별 normalized metric을 공통 schema로 맞추고 공급망, 경쟁 구도, 정책 event를 비교한다. 서로 다른 source의 시점과 통화, 회계 기준을 숨기지 않는다.
+
+### Daily tracker
+
+관심 기업의 새 공시, 가격 변화, 정해 둔 media source를 확인하고 이전 snapshot과 차이를 요약한다. 로컬에서는 사용자가 직접 실행하거나 host scheduler를 쓸 수 있다. 향후 cloud에서는 같은 manifest와 lock을 scheduler, queue, worker, notification에 연결할 수 있다.
+
+## UI와 content 경계
+
+Chart 후보로 [Recharts](https://recharts.org/)와 [shadcn Charts](https://ui.shadcn.com/docs/components/chart)를 검토할 수 있다. 금융 시계열에는 [TradingView Lightweight Charts](https://github.com/tradingview/lightweight-charts)도 후보가 될 수 있다. 실제 Package는 각 프로젝트의 license, attribution, version compatibility를 확인해야 하며, 라이브러리 이름을 언급하는 것만으로 사용 조건이 해결되지는 않는다.
+
+외부 공시, transcript, metadata는 먼저 typed structured data나 safe Markdown으로 normalize한다. Report가 rich 표현을 필요로 하면 registry에서 검토된 chart, table, citation 같은 제한된 component만 사용한다. 외부 content가 arbitrary executable MDX, 임의 import, inline script를 만들게 해서는 안 된다.
+
+YouTube 검색, metadata, transcript, frame 도구는 platform API 정책, 저작권, 접근 권한, 보관 범위를 따라야 한다. OpenDART 기반 Package도 API 이용 조건, key 보관, 요청 제한, 원문 출처를 명시해야 한다. `agent-bowl`은 이 정책을 대신 결정하지 않고 Package permission과 license 검토에 드러낸다.
+
+## 로컬 설치와 향후 cloud 실행
+
+로컬 설치에서는 resolver가 App lock을 확인하고 선택한 host adapter가 skill, CLI/MCP 설정, UI scaffold를 네이티브 경로에 materialize한다. Secret은 machine-local config에 남기고 공유 lock에는 넣지 않는다. 생성된 dashboard code는 사용자 소유이므로 update 시 덮어쓰지 않고 migration 또는 three-way merge 대상으로 본다.
+
+향후 cloud 실행은 같은 App manifest와 lock에 hosted storage, secret manager, scheduler, queue와 worker, notification을 연결한다. Cloud가 media, filing, methodology Package를 새로 정의하거나 소유하지 않는다. 이 예시가 MVP에서 차지하는 범위는 [MVP 문서](../mvp)에 정리되어 있다.
