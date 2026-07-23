@@ -1,0 +1,17 @@
+{
+  "title": "agent-bowl",
+  "pages": [
+    "index",
+    "vision",
+    "concepts",
+    "package-model",
+    "app-model",
+    "registry-platform",
+    "security-and-provenance",
+    "examples",
+    "mvp",
+    "workflow",
+    "planning",
+    "development"
+  ]
+}

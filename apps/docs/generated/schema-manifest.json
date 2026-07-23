@@ -1,0 +1,10 @@
+{
+  "metadata": {
+    "latestMigration": null,
+    "snapshotPath": null,
+    "schemaSourcePath": null,
+    "generatorPath": "apps/docs/scripts/generate-schema-manifest.mjs"
+  },
+  "tables": [],
+  "foreignKeys": []
+}

@@ -1,0 +1,60 @@
+---
+title: 보안과 출처 증명
+description: 위협 모델, immutable resolution, permission diff, 재현성 한계
+type: policy
+summary: 실행 능력 증가는 재승인한다. symlink는 계약이 아니다.
+---
+
+
+`agent-bowl`은 Package metadata를 신뢰 선언으로 받아들이지 않는다. 설치 전에 source와 closure를 확인하고 실행 능력과 데이터 접근을 사람이 검토할 수 있게 만드는 것이 기본 경계다.
+
+## 위협 모델
+
+주요 위험은 다음과 같다.
+
+- hook이나 설치 script가 예상하지 않은 command를 실행한다.
+- CLI 또는 MCP server가 filesystem, process, network에 과도하게 접근한다.
+- remote MCP endpoint가 입력, 문서, secret을 외부로 보낸다.
+- update가 새 executable이나 permission을 조용히 추가한다.
+- path traversal이나 symlink가 target root 밖 파일을 읽거나 덮어쓴다.
+- scaffold update가 사용자가 편집한 code와 config를 손상한다.
+- source가 바뀌거나 사라져 같은 이름이 다른 내용을 가리킨다.
+- license가 누락되거나 App의 배포 방식과 충돌한다.
+- rich preview나 report가 임의 script를 실행한다.
+
+## Source와 immutable resolution
+
+선택된 component는 canonical URL, requested ref, resolved commit, source path, closure hash에 연결한다. branch나 tag를 요청할 수는 있지만 lock에는 immutable commit을 남긴다. checkout 뒤 closure hash가 lock과 다르면 설치를 중단한다.
+
+Generated artifact에는 가능한 범위에서 원본 component와 commit, source path, 입력 closure hash, adapter version, materialized hash를 provenance로 남긴다. provenance는 보안 보증이 아니라 조사와 비교를 위한 증거다. 서명이나 transparency log 도입 여부는 별도 결정이 필요하다.
+
+## Permission과 실행 검토
+
+Package는 hook, executable script, MCP process 또는 endpoint, network domain, filesystem 범위, process 실행, secret 요구를 선언한다. 설치 화면은 직접 dependency와 transitive dependency의 요구를 함께 보여준다.
+
+Update 검토에서는 이전 lock과 새 lock 사이의 permission diff를 별도로 표시한다. 새 hook, executable, MCP server, network endpoint, secret 접근처럼 실행 능력이 늘면 기존 승인을 재사용하지 않고 다시 승인받는다. 선언보다 넓은 접근을 runtime에서 어느 수준까지 강제할지는 host와 운영체제 capability에 따라 달라질 수 있다.
+
+## License
+
+각 source와 component closure의 license와 notice 위치를 기록한다. License가 없거나 서로 충돌할 가능성이 있으면 자동으로 “허용”으로 해석하지 않는다. Registry metadata는 법률 판단을 대신하지 않으며 재배포·수정·상업 이용 여부를 검토할 자료를 제공한다.
+
+## Path와 symlink 안전
+
+- source path와 materialization path를 정규화하고 허용 root 내부인지 확인한다.
+- `..`, absolute path, device path처럼 root를 벗어날 수 있는 입력을 거부한다.
+- archive extraction은 link와 traversal을 검사한 뒤 수행한다.
+- source closure를 계산할 때 symlink를 그대로 신뢰하지 않는다. target이 root 밖이거나 확인할 수 없으면 실패한다.
+- install contract는 symlink 존재에 의존하지 않는다.
+- adapter는 기존 파일을 덮기 전에 receipt와 hash로 소유권을 확인한다.
+
+## Generated code 경계
+
+Scaffold가 만든 code는 생성 직후부터 사용자 소유로 전환될 수 있다. Base provenance는 이후 차이를 계산하는 데 쓰지만 강제 교체 권한을 주지 않는다. Update는 migration이나 three-way merge를 제안하고 충돌 시 사용자 파일을 보존한다. Secret과 local config 값은 provenance나 공유 lock에 기록하지 않는다.
+
+Report와 dashboard content는 structured data, safe Markdown, 허용된 rich component로 제한하는 방향이 적절하다. Arbitrary executable MDX, inline script, 임의 import는 신뢰 경계를 넓히므로 기본 허용 대상이 아니다.
+
+## 재현성의 한계
+
+Exact commit과 hash는 어떤 입력을 선택했는지 고정하지만 모든 실행 결과를 결정하지는 않는다. Model 응답, 외부 API, 시간, 운영체제, native dependency가 결과에 영향을 줄 수 있다. Upstream repository와 release artifact가 사라지면 lock만으로 content를 복구할 수 없다. Content-addressed cache가 남아 있으면 복구에 도움이 되지만 영구 보관이나 합법적 재배포를 보장하지 않는다.
+
+따라서 verify는 source availability, cached closure, materialized hash, host capability, 외부 dependency 상태를 나누어 보고해야 한다. 관련 lifecycle은 [App 모델](app-model), registry의 trust 표시 방식은 [레지스트리와 플랫폼](registry-platform)을 참고한다.

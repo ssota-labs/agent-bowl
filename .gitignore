@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+.DS_Store
+
+# apps/docs
+.next/
+.source/
+next-env.d.ts
+
+# humanize-korean scratch
+_workspace/
