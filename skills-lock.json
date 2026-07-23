@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "oh-my-doc": {
+      "source": "ssota-labs/oh-my-docs",
+      "sourceType": "github",
+      "skillPath": "skills/oh-my-doc/SKILL.md",
+      "computedHash": "54b7707301a15f7aa54085beb425f4b117290e58a866003a3d939eb117bd4880"
+    }
+  }
+}

@@ -1,0 +1,1351 @@
+{
+  "contractVersion": "1.0",
+  "skillVersion": "0.2.0",
+  "templateVersion": "0.2.0",
+  "uiSnapshot": {
+    "distribution": "skill-template",
+    "vocabularyDigest": "b1e9cd04c195828d578d42587e854c5b4da695dff98bd2d111bd68e321879556"
+  },
+  "projectDigest": "7cbc213c7431737bba3a7eb807d93d4ed5a946b1cc6a177023ab7d10245e7176",
+  "inventory": {
+    "sections": [
+      "home",
+      "vision",
+      "starting",
+      "workflow",
+      "planning",
+      "development",
+      "spec"
+    ],
+    "catalogs": [
+      "prds",
+      "stories",
+      "plans",
+      "adr"
+    ],
+    "vocabulary": [
+      "Card",
+      "Cards",
+      "File",
+      "Files",
+      "Folder",
+      "DocKind",
+      "DocStatus",
+      "AdrStatus",
+      "Decision",
+      "SpecVersion",
+      "Canvas",
+      "CanvasLegend",
+      "DocsInlineToc",
+      "DocsSidebarFolder",
+      "indexOnlyPageTree",
+      "createCatalogNavigation"
+    ]
+  },
+  "files": {
+    "packages/ui/package.json": {
+      "ownership": "omd-managed",
+      "digest": "4c92f69be1c7c55b5ea6c24c76f725ea24176c12f94be6009d3fc979f1b18716"
+    },
+    "packages/ui/src/components/canvas.tsx": {
+      "ownership": "omd-managed",
+      "digest": "318f1443dbaa0f45a9569955b92a7b388b958f68166daa3ad103f78b90b8ef59"
+    },
+    "packages/ui/src/components/decision.tsx": {
+      "ownership": "omd-managed",
+      "digest": "200bb80e53054da96e69be6606523328bfb3801b10283c380a2d6713bcb1caed"
+    },
+    "packages/ui/src/components/doc-kind.tsx": {
+      "ownership": "omd-managed",
+      "digest": "256d7d219288fdfbb0a280e7b2c447bfee4c74ea139b2b16d05e6ae5cadd39d5"
+    },
+    "packages/ui/src/components/doc-status.tsx": {
+      "ownership": "omd-managed",
+      "digest": "01b4c9f6f4bbdda7bfe534b25b951ac87014e1b0a1573c5988284b70d763f087"
+    },
+    "packages/ui/src/components/inline-toc.tsx": {
+      "ownership": "omd-managed",
+      "digest": "a7575d1502a4a8bb7c190c0c5cda33f6ace413bc88a7e97c2c8c0875d250cd40"
+    },
+    "packages/ui/src/components/sidebar-folder.tsx": {
+      "ownership": "omd-managed",
+      "digest": "111878de76966e1a7bd918e3f080822e5d3bf845fc07f16d98b31910f1d10baf"
+    },
+    "packages/ui/src/components/spec-version.tsx": {
+      "ownership": "omd-managed",
+      "digest": "c1ab3c2fe298dadc880ae107c8f8a4d98e91bed20e12839f5e634911cb40e3fe"
+    },
+    "packages/ui/src/doc-kinds.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "d9dd334ff509e4fe208ed917669503de42b79722eab4e788ac6b79d1a3617241"
+    },
+    "packages/ui/src/doc-kinds.ts": {
+      "ownership": "omd-managed",
+      "digest": "4d3b57853322ea902dc8147fc44f819ad5b13221e7c32e7d91db2bf8057a8c0b"
+    },
+    "packages/ui/src/fumadocs.ts": {
+      "ownership": "omd-managed",
+      "digest": "58295e3cd6d3c75a2446bc6e3d5cfcd74f17a6afbd0cd76a4e840739dcf11598"
+    },
+    "packages/ui/src/index.ts": {
+      "ownership": "omd-managed",
+      "digest": "23eb710eefaec53e907c33d911aeb16d4c34fc0bc91dc8ab00bb190f434815f4"
+    },
+    "packages/ui/src/lib/classes.ts": {
+      "ownership": "omd-managed",
+      "digest": "5bd5364cb66a68d14bf40a40d603fe735ccaf5f1605c4d0d1b243a813b7cf568"
+    },
+    "packages/ui/src/mdx.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3ec28b9f4cb0b08c592a9fc39c18ed7b6bb6d1b7dcdbc023019b1d0deeedd297"
+    },
+    "packages/ui/src/navigation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "09d410c56913797be35f58f5d783cde5f12dca41a46f9f4e7026f898b3055379"
+    },
+    "packages/ui/src/navigation.ts": {
+      "ownership": "omd-managed",
+      "digest": "b0fb5d8222346aaa74d5d718d147fb60f52b5889ea8edc7b9b66d64594d3d0bd"
+    },
+    "packages/ui/src/provider.ts": {
+      "ownership": "omd-managed",
+      "digest": "7e27fdbdffe4dbd63298ede617e9947c825ac93e9f39eb661b7c9febcdb4ead2"
+    },
+    "packages/ui/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "e8e9b72fea06996119ac666a391e954fdf112f78784fe05cc1d1e8eb393a42c9"
+    },
+    "AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "8dc9805e8fe4c76d5f3f7ed7c767aeafe061c9ff7212d0765e0e0f950d5a4e6f"
+    },
+    "CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "b8a4d26aeeda1fdbd5262688652b02776cd50965b8fcbf0e918fca1419bac762"
+    },
+    ".agents/skills/oh-my-doc/SKILL.md": {
+      "ownership": "omd-managed",
+      "digest": "5504a4c8e3e8f90e62cdbee0f2fc8cac41092d843ccd8d0c65bd54ea400394e0"
+    },
+    ".agents/skills/oh-my-doc/VERSION": {
+      "ownership": "omd-managed",
+      "digest": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
+    },
+    ".agents/skills/oh-my-doc/agents/openai.yaml": {
+      "ownership": "omd-managed",
+      "digest": "596bd2b76327fe2640dfa1df0afaa7fe0ff6cea101de58ca7a8e82b4e060effc"
+    },
+    ".agents/skills/oh-my-doc/assets/AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "a754cee5c10c0d78966854119bf23999a179b7b34268114038d9463b7ef21d30"
+    },
+    ".agents/skills/oh-my-doc/assets/CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "35f6231c48b07439cdd107f91251cd06462c44745b8359c5152cd5a7c50171c8"
+    },
+    ".agents/skills/oh-my-doc/references/agent-compatibility.md": {
+      "ownership": "omd-managed",
+      "digest": "735f096ccba7a6852e7ca70c67771a0013e24a70672077ecfa5576b135a09c6c"
+    },
+    ".agents/skills/oh-my-doc/references/document-contracts.md": {
+      "ownership": "omd-managed",
+      "digest": "c2b542402219da06e5d66f5b19f7a1c093d36e85c892af3665fbc4698bd58f22"
+    },
+    ".agents/skills/oh-my-doc/references/implementation-workflow.md": {
+      "ownership": "omd-managed",
+      "digest": "cfec7fd587edfbbdf2f801d92110512d3c037a6b7337cf2acfa6663fb257ac55"
+    },
+    ".agents/skills/oh-my-doc/references/information-architecture.md": {
+      "ownership": "omd-managed",
+      "digest": "b11e4049d098d67a8f56e6ea202d8c5500acad85d850f10c621a694890ca6ad3"
+    },
+    ".agents/skills/oh-my-doc/references/methodology.md": {
+      "ownership": "omd-managed",
+      "digest": "b65a173ef2baeff29ca00be1c3d6d11916a47f9cc6d192da197e5674278e8543"
+    },
+    ".agents/skills/oh-my-doc/references/planning-workflow.md": {
+      "ownership": "omd-managed",
+      "digest": "59248f35c966b30aab225f516704fd428d5d0414ca8b9d092e09cd522142cb38"
+    },
+    ".agents/skills/oh-my-doc/runtime/adopt.mjs": {
+      "ownership": "omd-managed",
+      "digest": "e8c3fbd127d68a043f4a3fae509af6f0be025c51c795ff438433b5a3deebc00f"
+    },
+    ".agents/skills/oh-my-doc/runtime/create-document.mjs": {
+      "ownership": "omd-managed",
+      "digest": "1a5c2a4339c4a128cc8d94cae1e05c99a1258f6e65168078d95b0cce8a62901a"
+    },
+    ".agents/skills/oh-my-doc/runtime/detect.mjs": {
+      "ownership": "omd-managed",
+      "digest": "f06317263b22ccd08b0d17f6be5139a5d2d2cfcc44941486c085964a607c8c87"
+    },
+    ".agents/skills/oh-my-doc/runtime/docs-first.mjs": {
+      "ownership": "omd-managed",
+      "digest": "a6ce768373f024c22e1de1425b921a7667884582944996dd861840e3e1230611"
+    },
+    ".agents/skills/oh-my-doc/runtime/doctor.mjs": {
+      "ownership": "omd-managed",
+      "digest": "06ac97ae192520b76229e19e56eddc93e74516db71b135253e99428b6ab0e301"
+    },
+    ".agents/skills/oh-my-doc/runtime/frontmatter.mjs": {
+      "ownership": "omd-managed",
+      "digest": "fa287fce6097cb70cd64f9aed2f2639ef707ec9099e4650606feea86606a94cd"
+    },
+    ".agents/skills/oh-my-doc/runtime/fs-ops.mjs": {
+      "ownership": "omd-managed",
+      "digest": "779171304a89b22e33cb867c83a1a4ca388a1ab75fbf6481e69d35b6d3f91eba"
+    },
+    ".agents/skills/oh-my-doc/runtime/index.mjs": {
+      "ownership": "omd-managed",
+      "digest": "bcc0e3203f2001907628e075288ecbbf64893d71b58852ca5523ad1b20fc1a05"
+    },
+    ".agents/skills/oh-my-doc/runtime/inspect.mjs": {
+      "ownership": "omd-managed",
+      "digest": "b95b14e062de3445eeea8258a796176ea6efced43aed7ef48647e40b8e4a7efd"
+    },
+    ".agents/skills/oh-my-doc/runtime/markers.mjs": {
+      "ownership": "omd-managed",
+      "digest": "8ec24514083d70a14ffdff16cd45c7610a0d234d88037c287eb630a72753406c"
+    },
+    ".agents/skills/oh-my-doc/runtime/omd-contract.mjs": {
+      "ownership": "omd-managed",
+      "digest": "a9ae4bfc0aadfb65d644fb642f60c77cb2687997748bbb771acb9caa1b9b7cfd"
+    },
+    ".agents/skills/oh-my-doc/runtime/plan-init.mjs": {
+      "ownership": "omd-managed",
+      "digest": "bbf708de6ac8b67d952a820e42852be2ecbe1cc68300b309775653659d75c20a"
+    },
+    ".agents/skills/oh-my-doc/runtime/plan-setup.mjs": {
+      "ownership": "omd-managed",
+      "digest": "6f4a88abf70eda9b09f4a0e46952933a7f52ac4d8cb6a7194362494f64f42e59"
+    },
+    ".agents/skills/oh-my-doc/runtime/planning.mjs": {
+      "ownership": "omd-managed",
+      "digest": "3ea66825d9be138cc151682a97fe97147b74bcefbbcf8284b1a30b87a2e5d350"
+    },
+    ".agents/skills/oh-my-doc/runtime/skill-paths.mjs": {
+      "ownership": "omd-managed",
+      "digest": "61db09d9701160d5576bea46808c0a53f1207c486b109abfcc2262de0fdc4e7b"
+    },
+    ".agents/skills/oh-my-doc/runtime/types.mjs": {
+      "ownership": "omd-managed",
+      "digest": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    ".agents/skills/oh-my-doc/schemas/project-1.0.schema.json": {
+      "ownership": "omd-managed",
+      "digest": "1c11ba887254c0909348dddfe90f6d2b19c9c1fdc8c8a621e4b7130ad9134bcc"
+    },
+    ".agents/skills/oh-my-doc/schemas/state-1.0.schema.json": {
+      "ownership": "omd-managed",
+      "digest": "830a017458c692116441bb23e92d82a15e2976cbb16db2b3350078d206c1d864"
+    },
+    ".agents/skills/oh-my-doc/scripts/omd.mjs": {
+      "ownership": "omd-managed",
+      "digest": "7b63e88f89a2a7b41b8e521030681e48e93fd916ea8415c8af964c7a0c7ce7e9"
+    },
+    ".agents/skills/oh-my-doc/scripts/run.mjs": {
+      "ownership": "omd-managed",
+      "digest": "98044bc6bfeebdc9eb261e0f16b333be5a5f00ab56f8b52450c013c2c2b13191"
+    },
+    ".agents/skills/oh-my-doc/templates/default/AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "b65147ea912ab628f04ba4e3faecf9849e26f42bc8b07046b224d1e480855f39"
+    },
+    ".agents/skills/oh-my-doc/templates/default/CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "1770747ba0886bf708f1834062c2f1c64d26527369ba011eec72e53c362e26d4"
+    },
+    ".agents/skills/oh-my-doc/templates/default/README.md": {
+      "ownership": "omd-managed",
+      "digest": "1cd5ae4832aca0edeaedb9ad57cc67d86265fd5576ac219840f810b7cf96a9c6"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/app/docs/[[...slug]]/page.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3139a319936f339429e724083ca446a4eecc60e00420f110bf81676fd3e737a5"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/app/docs/layout.tsx": {
+      "ownership": "omd-managed",
+      "digest": "978c406b54bbc28b2c43a797ac3d29d18e9884f92177d94d4f8d4025e17b5c54"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/app/global.css": {
+      "ownership": "omd-managed",
+      "digest": "9cb078ccf49421c25ddead0d403b38028fa84207622fe2607cf3968bbd58e989"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/app/layout.tsx": {
+      "ownership": "omd-managed",
+      "digest": "5e45abbd41e51507e85a188fab11dda0dbb5271cd1fab20b191d37ea619b3ed0"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/app/md/[[...slug]]/route.ts": {
+      "ownership": "omd-managed",
+      "digest": "f9b4f0d23ebddffb7a5ca4c6c233e14dd9b7042eca471d28c2166fc70506d250"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/app/page.tsx": {
+      "ownership": "omd-managed",
+      "digest": "f11990d0477cdb963baa299d611bbdcc6235e200688d4a262c5be84ac7f2dab3"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/development/adr/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "4b2d00d64323bebf76b0c9bacbf797d9cccc97a91b3a170828d1ea6de224f807"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/development/adr/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "892d75c675d3008fd4c10c7333731dab5e848fe356913b53db69acc8562fecb7"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/development/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "7e916a4643c510bde7bd273e9f59b7747c7e5d17b9b00f28283386c5e59b6999"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/development/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "3a6c29b95c25508e1bd2dac8c67406d5f0b0944b07f6d768f67f0713276a5518"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/development/plans/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "1193fdb9b25c5fb51654ce7caa0e04a634443c1d391c8a47dbe2bbb142b2a559"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/development/plans/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "8ad3271ba2ef47bffb8d50481e7e06a1a07dbc290d4fc411b6cbf327245001df"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "cdd0c2181f7813c99c565fca71463034a4071156769fbec50a5363eb24710100"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "de978ecf8f52c7141d50ea91300a4d5b158efaf05bfd6a889ae670385882ff94"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/planning/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "d4dee14ad31c5366043e6d213fb12b402c77021b7f1aa6b3ec1fc0dd94afabe2"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/planning/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "7fe139b87c52d981867ddd2f85cc9c0f5b7dc5429f581063fc8b289dcca771ee"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/planning/prds/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "2c96dbb0a849e4b10936a9cc2fad50b8a55a4d7e359ed7dffc26e23f7c9550c2"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/planning/prds/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "c508eea76f928ec851f15904db16037520e2c8635233d7b48706e2d368d2c73a"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/planning/stories/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "f0b31d65167d10c032117bdd6840a56d9f22a6e4b97b1bc201acc86ddacd9317"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/planning/stories/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "9fb95791c23168cbb9c2501677b373678ff88b45f016919dd90581f430291fd7"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/spec/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "c195c2284d49be572411e0598e109c4f84a6d0768d6f14376f5674856035ab4e"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/spec/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "9d3d039e72ee7f483ee581098c643dc752aa4b871fd1e416b63fb321fa82098c"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/starting/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "c008ad5e1b5027e4eac6af7fe3ad645f9873ed1c1656197364570bb30adf2910"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/starting/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "38885e7375e5f06c01db56bb201ac9f55395efe4671b5f25e379c32eb5674038"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/vision.mdx": {
+      "ownership": "omd-managed",
+      "digest": "b5530c232b026a8f23cb715c95b2edf683c662efc785d1616b655f0669629f8c"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/workflow/development.mdx": {
+      "ownership": "omd-managed",
+      "digest": "960ba7a53430b23e5eb8a34620998829acb70c9954f592776e874abe75eeb1a2"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/workflow/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "dfb307a758d410cacb0bfd1b9549fb2d7fe31d91a2245f0313b608d69fc85038"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/content/docs/workflow/planning.mdx": {
+      "ownership": "omd-managed",
+      "digest": "64fe5a88c8649d0843387074797272a115c4394aca7707b17d17f218500bde7b"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/lib/layout.shared.tsx": {
+      "ownership": "omd-managed",
+      "digest": "e87213337a127cb7c28544b8767127501a8b62acf008415ced9a9bd2d8d00dc7"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/lib/source.ts": {
+      "ownership": "omd-managed",
+      "digest": "a0aca1ac5e91c1a6d28b9fba4658c26d5f04f6a9ec6ecbc72a8675b730f08584"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/next-env.d.ts": {
+      "ownership": "omd-managed",
+      "digest": "2ab3cee659ad146fb941d7420316fc2551863a2aec790736929b4ecdfc6cf24c"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/next.config.mjs": {
+      "ownership": "omd-managed",
+      "digest": "5eb4ff3fea71df51aa67fe8d296d70ad89b1103a301489bcaf74858af172c59e"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/package.json": {
+      "ownership": "omd-managed",
+      "digest": "ba2ac66c389953037247a6a42c7bf73eff895950aff55c12467f4a3d932fba68"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/postcss.config.mjs": {
+      "ownership": "omd-managed",
+      "digest": "4cae941be9bc3bee9a6905e47ea7a51aee216d587d34a8cc4ae48f78fd6d8159"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/scripts/check-planning.ts": {
+      "ownership": "omd-managed",
+      "digest": "1534d9d0bdc0cc472a0ba337b45b9faf10fbdd2b8e4e4d2fd32ffb76412dba44"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/scripts/planning-validation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "794095e28c0019217d5858501b64888905b394172ff8a10b19551b1368609b63"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/scripts/planning-validation.ts": {
+      "ownership": "omd-managed",
+      "digest": "2271096775c5cd8391c56e5185813f84373efb0a6184419b3f29a6e50ba3fbcc"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/source.config.ts": {
+      "ownership": "omd-managed",
+      "digest": "493aed7454b2510309a9d046aea8e8fbaa67816a61254b29a5abcca5648f1da3"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/templates/adr.mdx": {
+      "ownership": "omd-managed",
+      "digest": "47278df23f15738b9e939365b6e9b9c585731b6802328d03bc728f20efe5153d"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/templates/implementation-plan.mdx": {
+      "ownership": "omd-managed",
+      "digest": "892592f742f5cf4c93c8c8aab3d06fd87bb7c68d9c85931d4e151ad1abbe801b"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/templates/prd.mdx": {
+      "ownership": "omd-managed",
+      "digest": "da54d81f1f3b095cfdccf3fc1e0dac7223b1e2df2cae9d5de679c38c2238f8d5"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/templates/spec.mdx": {
+      "ownership": "omd-managed",
+      "digest": "46db6f37daf895bd9058ac004d3f0abbfaf148c86102603460cd16b497b90bdf"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/templates/user-story.mdx": {
+      "ownership": "omd-managed",
+      "digest": "306719713db2347582cb38c7766867b06534e29161f905ff8b122741d8d7b627"
+    },
+    ".agents/skills/oh-my-doc/templates/default/docs/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "ba69f67420437dbd4b9de486a67e5be423cea693ed1f246285ccb4950142b563"
+    },
+    ".agents/skills/oh-my-doc/templates/default/gitignore": {
+      "ownership": "omd-managed",
+      "digest": "d4b5e641f826a29f88829b2694a7b8f34479af703839ab49cf37aff0f76e4a9e"
+    },
+    ".agents/skills/oh-my-doc/templates/default/package.json": {
+      "ownership": "omd-managed",
+      "digest": "58b402410bcae1bb31b646c95820d2a009f05166f91c6a390954dccceceb6b8a"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/package.json": {
+      "ownership": "omd-managed",
+      "digest": "4c92f69be1c7c55b5ea6c24c76f725ea24176c12f94be6009d3fc979f1b18716"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/canvas.tsx": {
+      "ownership": "omd-managed",
+      "digest": "318f1443dbaa0f45a9569955b92a7b388b958f68166daa3ad103f78b90b8ef59"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/decision.tsx": {
+      "ownership": "omd-managed",
+      "digest": "200bb80e53054da96e69be6606523328bfb3801b10283c380a2d6713bcb1caed"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/doc-kind.tsx": {
+      "ownership": "omd-managed",
+      "digest": "256d7d219288fdfbb0a280e7b2c447bfee4c74ea139b2b16d05e6ae5cadd39d5"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/doc-status.tsx": {
+      "ownership": "omd-managed",
+      "digest": "01b4c9f6f4bbdda7bfe534b25b951ac87014e1b0a1573c5988284b70d763f087"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/inline-toc.tsx": {
+      "ownership": "omd-managed",
+      "digest": "a7575d1502a4a8bb7c190c0c5cda33f6ace413bc88a7e97c2c8c0875d250cd40"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/sidebar-folder.tsx": {
+      "ownership": "omd-managed",
+      "digest": "111878de76966e1a7bd918e3f080822e5d3bf845fc07f16d98b31910f1d10baf"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/components/spec-version.tsx": {
+      "ownership": "omd-managed",
+      "digest": "c1ab3c2fe298dadc880ae107c8f8a4d98e91bed20e12839f5e634911cb40e3fe"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/doc-kinds.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "d9dd334ff509e4fe208ed917669503de42b79722eab4e788ac6b79d1a3617241"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/doc-kinds.ts": {
+      "ownership": "omd-managed",
+      "digest": "4d3b57853322ea902dc8147fc44f819ad5b13221e7c32e7d91db2bf8057a8c0b"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/fumadocs.ts": {
+      "ownership": "omd-managed",
+      "digest": "58295e3cd6d3c75a2446bc6e3d5cfcd74f17a6afbd0cd76a4e840739dcf11598"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/index.ts": {
+      "ownership": "omd-managed",
+      "digest": "23eb710eefaec53e907c33d911aeb16d4c34fc0bc91dc8ab00bb190f434815f4"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/lib/classes.ts": {
+      "ownership": "omd-managed",
+      "digest": "5bd5364cb66a68d14bf40a40d603fe735ccaf5f1605c4d0d1b243a813b7cf568"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/mdx.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3ec28b9f4cb0b08c592a9fc39c18ed7b6bb6d1b7dcdbc023019b1d0deeedd297"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/navigation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "09d410c56913797be35f58f5d783cde5f12dca41a46f9f4e7026f898b3055379"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/navigation.ts": {
+      "ownership": "omd-managed",
+      "digest": "b0fb5d8222346aaa74d5d718d147fb60f52b5889ea8edc7b9b66d64594d3d0bd"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/src/provider.ts": {
+      "ownership": "omd-managed",
+      "digest": "7e27fdbdffe4dbd63298ede617e9947c825ac93e9f39eb661b7c9febcdb4ead2"
+    },
+    ".agents/skills/oh-my-doc/templates/default/packages/ui/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "e8e9b72fea06996119ac666a391e954fdf112f78784fe05cc1d1e8eb393a42c9"
+    },
+    ".agents/skills/oh-my-doc/templates/default/pnpm-workspace.yaml": {
+      "ownership": "omd-managed",
+      "digest": "4a9579173b1975cc2968e767b425c78aecf438ff05c64d15257f18027c2ef400"
+    },
+    ".agents/skills/oh-my-doc/templates/default/tsconfig.base.json": {
+      "ownership": "omd-managed",
+      "digest": "bdf7e03a5d5eeb69c667b175d1d725ebc34c1bb657c6233b685aee7c470a4892"
+    },
+    ".agents/skills/oh-my-doc/templates/default/turbo.json": {
+      "ownership": "omd-managed",
+      "digest": "c450d42d8503484cedf827b549a7d40ec50cfbd70382e8fb32f6127cb8e478dd"
+    },
+    ".agents/skills/oh-my-doc/tests/runtime.test.mjs": {
+      "ownership": "omd-managed",
+      "digest": "6b0b229244b554590a7f9eafd71ac4052e3ec29c585188d3ac01775baf43f60f"
+    },
+    ".cursor/skills/oh-my-doc/SKILL.md": {
+      "ownership": "omd-managed",
+      "digest": "5504a4c8e3e8f90e62cdbee0f2fc8cac41092d843ccd8d0c65bd54ea400394e0"
+    },
+    ".cursor/skills/oh-my-doc/VERSION": {
+      "ownership": "omd-managed",
+      "digest": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
+    },
+    ".cursor/skills/oh-my-doc/agents/openai.yaml": {
+      "ownership": "omd-managed",
+      "digest": "596bd2b76327fe2640dfa1df0afaa7fe0ff6cea101de58ca7a8e82b4e060effc"
+    },
+    ".cursor/skills/oh-my-doc/assets/AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "a754cee5c10c0d78966854119bf23999a179b7b34268114038d9463b7ef21d30"
+    },
+    ".cursor/skills/oh-my-doc/assets/CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "35f6231c48b07439cdd107f91251cd06462c44745b8359c5152cd5a7c50171c8"
+    },
+    ".cursor/skills/oh-my-doc/references/agent-compatibility.md": {
+      "ownership": "omd-managed",
+      "digest": "735f096ccba7a6852e7ca70c67771a0013e24a70672077ecfa5576b135a09c6c"
+    },
+    ".cursor/skills/oh-my-doc/references/document-contracts.md": {
+      "ownership": "omd-managed",
+      "digest": "c2b542402219da06e5d66f5b19f7a1c093d36e85c892af3665fbc4698bd58f22"
+    },
+    ".cursor/skills/oh-my-doc/references/implementation-workflow.md": {
+      "ownership": "omd-managed",
+      "digest": "cfec7fd587edfbbdf2f801d92110512d3c037a6b7337cf2acfa6663fb257ac55"
+    },
+    ".cursor/skills/oh-my-doc/references/information-architecture.md": {
+      "ownership": "omd-managed",
+      "digest": "b11e4049d098d67a8f56e6ea202d8c5500acad85d850f10c621a694890ca6ad3"
+    },
+    ".cursor/skills/oh-my-doc/references/methodology.md": {
+      "ownership": "omd-managed",
+      "digest": "b65a173ef2baeff29ca00be1c3d6d11916a47f9cc6d192da197e5674278e8543"
+    },
+    ".cursor/skills/oh-my-doc/references/planning-workflow.md": {
+      "ownership": "omd-managed",
+      "digest": "59248f35c966b30aab225f516704fd428d5d0414ca8b9d092e09cd522142cb38"
+    },
+    ".cursor/skills/oh-my-doc/runtime/adopt.mjs": {
+      "ownership": "omd-managed",
+      "digest": "e8c3fbd127d68a043f4a3fae509af6f0be025c51c795ff438433b5a3deebc00f"
+    },
+    ".cursor/skills/oh-my-doc/runtime/create-document.mjs": {
+      "ownership": "omd-managed",
+      "digest": "1a5c2a4339c4a128cc8d94cae1e05c99a1258f6e65168078d95b0cce8a62901a"
+    },
+    ".cursor/skills/oh-my-doc/runtime/detect.mjs": {
+      "ownership": "omd-managed",
+      "digest": "f06317263b22ccd08b0d17f6be5139a5d2d2cfcc44941486c085964a607c8c87"
+    },
+    ".cursor/skills/oh-my-doc/runtime/docs-first.mjs": {
+      "ownership": "omd-managed",
+      "digest": "a6ce768373f024c22e1de1425b921a7667884582944996dd861840e3e1230611"
+    },
+    ".cursor/skills/oh-my-doc/runtime/doctor.mjs": {
+      "ownership": "omd-managed",
+      "digest": "06ac97ae192520b76229e19e56eddc93e74516db71b135253e99428b6ab0e301"
+    },
+    ".cursor/skills/oh-my-doc/runtime/frontmatter.mjs": {
+      "ownership": "omd-managed",
+      "digest": "fa287fce6097cb70cd64f9aed2f2639ef707ec9099e4650606feea86606a94cd"
+    },
+    ".cursor/skills/oh-my-doc/runtime/fs-ops.mjs": {
+      "ownership": "omd-managed",
+      "digest": "779171304a89b22e33cb867c83a1a4ca388a1ab75fbf6481e69d35b6d3f91eba"
+    },
+    ".cursor/skills/oh-my-doc/runtime/index.mjs": {
+      "ownership": "omd-managed",
+      "digest": "bcc0e3203f2001907628e075288ecbbf64893d71b58852ca5523ad1b20fc1a05"
+    },
+    ".cursor/skills/oh-my-doc/runtime/inspect.mjs": {
+      "ownership": "omd-managed",
+      "digest": "b95b14e062de3445eeea8258a796176ea6efced43aed7ef48647e40b8e4a7efd"
+    },
+    ".cursor/skills/oh-my-doc/runtime/markers.mjs": {
+      "ownership": "omd-managed",
+      "digest": "8ec24514083d70a14ffdff16cd45c7610a0d234d88037c287eb630a72753406c"
+    },
+    ".cursor/skills/oh-my-doc/runtime/omd-contract.mjs": {
+      "ownership": "omd-managed",
+      "digest": "a9ae4bfc0aadfb65d644fb642f60c77cb2687997748bbb771acb9caa1b9b7cfd"
+    },
+    ".cursor/skills/oh-my-doc/runtime/plan-init.mjs": {
+      "ownership": "omd-managed",
+      "digest": "bbf708de6ac8b67d952a820e42852be2ecbe1cc68300b309775653659d75c20a"
+    },
+    ".cursor/skills/oh-my-doc/runtime/plan-setup.mjs": {
+      "ownership": "omd-managed",
+      "digest": "6f4a88abf70eda9b09f4a0e46952933a7f52ac4d8cb6a7194362494f64f42e59"
+    },
+    ".cursor/skills/oh-my-doc/runtime/planning.mjs": {
+      "ownership": "omd-managed",
+      "digest": "3ea66825d9be138cc151682a97fe97147b74bcefbbcf8284b1a30b87a2e5d350"
+    },
+    ".cursor/skills/oh-my-doc/runtime/skill-paths.mjs": {
+      "ownership": "omd-managed",
+      "digest": "61db09d9701160d5576bea46808c0a53f1207c486b109abfcc2262de0fdc4e7b"
+    },
+    ".cursor/skills/oh-my-doc/runtime/types.mjs": {
+      "ownership": "omd-managed",
+      "digest": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    ".cursor/skills/oh-my-doc/schemas/project-1.0.schema.json": {
+      "ownership": "omd-managed",
+      "digest": "1c11ba887254c0909348dddfe90f6d2b19c9c1fdc8c8a621e4b7130ad9134bcc"
+    },
+    ".cursor/skills/oh-my-doc/schemas/state-1.0.schema.json": {
+      "ownership": "omd-managed",
+      "digest": "830a017458c692116441bb23e92d82a15e2976cbb16db2b3350078d206c1d864"
+    },
+    ".cursor/skills/oh-my-doc/scripts/omd.mjs": {
+      "ownership": "omd-managed",
+      "digest": "7b63e88f89a2a7b41b8e521030681e48e93fd916ea8415c8af964c7a0c7ce7e9"
+    },
+    ".cursor/skills/oh-my-doc/scripts/run.mjs": {
+      "ownership": "omd-managed",
+      "digest": "98044bc6bfeebdc9eb261e0f16b333be5a5f00ab56f8b52450c013c2c2b13191"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "b65147ea912ab628f04ba4e3faecf9849e26f42bc8b07046b224d1e480855f39"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "1770747ba0886bf708f1834062c2f1c64d26527369ba011eec72e53c362e26d4"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/README.md": {
+      "ownership": "omd-managed",
+      "digest": "1cd5ae4832aca0edeaedb9ad57cc67d86265fd5576ac219840f810b7cf96a9c6"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/app/docs/[[...slug]]/page.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3139a319936f339429e724083ca446a4eecc60e00420f110bf81676fd3e737a5"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/app/docs/layout.tsx": {
+      "ownership": "omd-managed",
+      "digest": "978c406b54bbc28b2c43a797ac3d29d18e9884f92177d94d4f8d4025e17b5c54"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/app/global.css": {
+      "ownership": "omd-managed",
+      "digest": "9cb078ccf49421c25ddead0d403b38028fa84207622fe2607cf3968bbd58e989"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/app/layout.tsx": {
+      "ownership": "omd-managed",
+      "digest": "5e45abbd41e51507e85a188fab11dda0dbb5271cd1fab20b191d37ea619b3ed0"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/app/md/[[...slug]]/route.ts": {
+      "ownership": "omd-managed",
+      "digest": "f9b4f0d23ebddffb7a5ca4c6c233e14dd9b7042eca471d28c2166fc70506d250"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/app/page.tsx": {
+      "ownership": "omd-managed",
+      "digest": "f11990d0477cdb963baa299d611bbdcc6235e200688d4a262c5be84ac7f2dab3"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/development/adr/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "4b2d00d64323bebf76b0c9bacbf797d9cccc97a91b3a170828d1ea6de224f807"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/development/adr/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "892d75c675d3008fd4c10c7333731dab5e848fe356913b53db69acc8562fecb7"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/development/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "7e916a4643c510bde7bd273e9f59b7747c7e5d17b9b00f28283386c5e59b6999"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/development/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "3a6c29b95c25508e1bd2dac8c67406d5f0b0944b07f6d768f67f0713276a5518"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/development/plans/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "1193fdb9b25c5fb51654ce7caa0e04a634443c1d391c8a47dbe2bbb142b2a559"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/development/plans/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "8ad3271ba2ef47bffb8d50481e7e06a1a07dbc290d4fc411b6cbf327245001df"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "cdd0c2181f7813c99c565fca71463034a4071156769fbec50a5363eb24710100"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "de978ecf8f52c7141d50ea91300a4d5b158efaf05bfd6a889ae670385882ff94"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/planning/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "d4dee14ad31c5366043e6d213fb12b402c77021b7f1aa6b3ec1fc0dd94afabe2"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/planning/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "7fe139b87c52d981867ddd2f85cc9c0f5b7dc5429f581063fc8b289dcca771ee"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/planning/prds/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "2c96dbb0a849e4b10936a9cc2fad50b8a55a4d7e359ed7dffc26e23f7c9550c2"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/planning/prds/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "c508eea76f928ec851f15904db16037520e2c8635233d7b48706e2d368d2c73a"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/planning/stories/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "f0b31d65167d10c032117bdd6840a56d9f22a6e4b97b1bc201acc86ddacd9317"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/planning/stories/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "9fb95791c23168cbb9c2501677b373678ff88b45f016919dd90581f430291fd7"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/spec/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "c195c2284d49be572411e0598e109c4f84a6d0768d6f14376f5674856035ab4e"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/spec/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "9d3d039e72ee7f483ee581098c643dc752aa4b871fd1e416b63fb321fa82098c"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/starting/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "c008ad5e1b5027e4eac6af7fe3ad645f9873ed1c1656197364570bb30adf2910"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/starting/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "38885e7375e5f06c01db56bb201ac9f55395efe4671b5f25e379c32eb5674038"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/vision.mdx": {
+      "ownership": "omd-managed",
+      "digest": "b5530c232b026a8f23cb715c95b2edf683c662efc785d1616b655f0669629f8c"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/workflow/development.mdx": {
+      "ownership": "omd-managed",
+      "digest": "960ba7a53430b23e5eb8a34620998829acb70c9954f592776e874abe75eeb1a2"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/workflow/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "dfb307a758d410cacb0bfd1b9549fb2d7fe31d91a2245f0313b608d69fc85038"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/content/docs/workflow/planning.mdx": {
+      "ownership": "omd-managed",
+      "digest": "64fe5a88c8649d0843387074797272a115c4394aca7707b17d17f218500bde7b"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/lib/layout.shared.tsx": {
+      "ownership": "omd-managed",
+      "digest": "e87213337a127cb7c28544b8767127501a8b62acf008415ced9a9bd2d8d00dc7"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/lib/source.ts": {
+      "ownership": "omd-managed",
+      "digest": "a0aca1ac5e91c1a6d28b9fba4658c26d5f04f6a9ec6ecbc72a8675b730f08584"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/next-env.d.ts": {
+      "ownership": "omd-managed",
+      "digest": "2ab3cee659ad146fb941d7420316fc2551863a2aec790736929b4ecdfc6cf24c"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/next.config.mjs": {
+      "ownership": "omd-managed",
+      "digest": "5eb4ff3fea71df51aa67fe8d296d70ad89b1103a301489bcaf74858af172c59e"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/package.json": {
+      "ownership": "omd-managed",
+      "digest": "ba2ac66c389953037247a6a42c7bf73eff895950aff55c12467f4a3d932fba68"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/postcss.config.mjs": {
+      "ownership": "omd-managed",
+      "digest": "4cae941be9bc3bee9a6905e47ea7a51aee216d587d34a8cc4ae48f78fd6d8159"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/scripts/check-planning.ts": {
+      "ownership": "omd-managed",
+      "digest": "1534d9d0bdc0cc472a0ba337b45b9faf10fbdd2b8e4e4d2fd32ffb76412dba44"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/scripts/planning-validation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "794095e28c0019217d5858501b64888905b394172ff8a10b19551b1368609b63"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/scripts/planning-validation.ts": {
+      "ownership": "omd-managed",
+      "digest": "2271096775c5cd8391c56e5185813f84373efb0a6184419b3f29a6e50ba3fbcc"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/source.config.ts": {
+      "ownership": "omd-managed",
+      "digest": "493aed7454b2510309a9d046aea8e8fbaa67816a61254b29a5abcca5648f1da3"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/templates/adr.mdx": {
+      "ownership": "omd-managed",
+      "digest": "47278df23f15738b9e939365b6e9b9c585731b6802328d03bc728f20efe5153d"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/templates/implementation-plan.mdx": {
+      "ownership": "omd-managed",
+      "digest": "892592f742f5cf4c93c8c8aab3d06fd87bb7c68d9c85931d4e151ad1abbe801b"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/templates/prd.mdx": {
+      "ownership": "omd-managed",
+      "digest": "da54d81f1f3b095cfdccf3fc1e0dac7223b1e2df2cae9d5de679c38c2238f8d5"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/templates/spec.mdx": {
+      "ownership": "omd-managed",
+      "digest": "46db6f37daf895bd9058ac004d3f0abbfaf148c86102603460cd16b497b90bdf"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/templates/user-story.mdx": {
+      "ownership": "omd-managed",
+      "digest": "306719713db2347582cb38c7766867b06534e29161f905ff8b122741d8d7b627"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/docs/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "ba69f67420437dbd4b9de486a67e5be423cea693ed1f246285ccb4950142b563"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/gitignore": {
+      "ownership": "omd-managed",
+      "digest": "d4b5e641f826a29f88829b2694a7b8f34479af703839ab49cf37aff0f76e4a9e"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/package.json": {
+      "ownership": "omd-managed",
+      "digest": "58b402410bcae1bb31b646c95820d2a009f05166f91c6a390954dccceceb6b8a"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/package.json": {
+      "ownership": "omd-managed",
+      "digest": "4c92f69be1c7c55b5ea6c24c76f725ea24176c12f94be6009d3fc979f1b18716"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/canvas.tsx": {
+      "ownership": "omd-managed",
+      "digest": "318f1443dbaa0f45a9569955b92a7b388b958f68166daa3ad103f78b90b8ef59"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/decision.tsx": {
+      "ownership": "omd-managed",
+      "digest": "200bb80e53054da96e69be6606523328bfb3801b10283c380a2d6713bcb1caed"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/doc-kind.tsx": {
+      "ownership": "omd-managed",
+      "digest": "256d7d219288fdfbb0a280e7b2c447bfee4c74ea139b2b16d05e6ae5cadd39d5"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/doc-status.tsx": {
+      "ownership": "omd-managed",
+      "digest": "01b4c9f6f4bbdda7bfe534b25b951ac87014e1b0a1573c5988284b70d763f087"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/inline-toc.tsx": {
+      "ownership": "omd-managed",
+      "digest": "a7575d1502a4a8bb7c190c0c5cda33f6ace413bc88a7e97c2c8c0875d250cd40"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/sidebar-folder.tsx": {
+      "ownership": "omd-managed",
+      "digest": "111878de76966e1a7bd918e3f080822e5d3bf845fc07f16d98b31910f1d10baf"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/components/spec-version.tsx": {
+      "ownership": "omd-managed",
+      "digest": "c1ab3c2fe298dadc880ae107c8f8a4d98e91bed20e12839f5e634911cb40e3fe"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/doc-kinds.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "d9dd334ff509e4fe208ed917669503de42b79722eab4e788ac6b79d1a3617241"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/doc-kinds.ts": {
+      "ownership": "omd-managed",
+      "digest": "4d3b57853322ea902dc8147fc44f819ad5b13221e7c32e7d91db2bf8057a8c0b"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/fumadocs.ts": {
+      "ownership": "omd-managed",
+      "digest": "58295e3cd6d3c75a2446bc6e3d5cfcd74f17a6afbd0cd76a4e840739dcf11598"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/index.ts": {
+      "ownership": "omd-managed",
+      "digest": "23eb710eefaec53e907c33d911aeb16d4c34fc0bc91dc8ab00bb190f434815f4"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/lib/classes.ts": {
+      "ownership": "omd-managed",
+      "digest": "5bd5364cb66a68d14bf40a40d603fe735ccaf5f1605c4d0d1b243a813b7cf568"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/mdx.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3ec28b9f4cb0b08c592a9fc39c18ed7b6bb6d1b7dcdbc023019b1d0deeedd297"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/navigation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "09d410c56913797be35f58f5d783cde5f12dca41a46f9f4e7026f898b3055379"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/navigation.ts": {
+      "ownership": "omd-managed",
+      "digest": "b0fb5d8222346aaa74d5d718d147fb60f52b5889ea8edc7b9b66d64594d3d0bd"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/src/provider.ts": {
+      "ownership": "omd-managed",
+      "digest": "7e27fdbdffe4dbd63298ede617e9947c825ac93e9f39eb661b7c9febcdb4ead2"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/packages/ui/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "e8e9b72fea06996119ac666a391e954fdf112f78784fe05cc1d1e8eb393a42c9"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/pnpm-workspace.yaml": {
+      "ownership": "omd-managed",
+      "digest": "4a9579173b1975cc2968e767b425c78aecf438ff05c64d15257f18027c2ef400"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/tsconfig.base.json": {
+      "ownership": "omd-managed",
+      "digest": "bdf7e03a5d5eeb69c667b175d1d725ebc34c1bb657c6233b685aee7c470a4892"
+    },
+    ".cursor/skills/oh-my-doc/templates/default/turbo.json": {
+      "ownership": "omd-managed",
+      "digest": "c450d42d8503484cedf827b549a7d40ec50cfbd70382e8fb32f6127cb8e478dd"
+    },
+    ".cursor/skills/oh-my-doc/tests/runtime.test.mjs": {
+      "ownership": "omd-managed",
+      "digest": "6b0b229244b554590a7f9eafd71ac4052e3ec29c585188d3ac01775baf43f60f"
+    },
+    ".claude/skills/oh-my-doc/SKILL.md": {
+      "ownership": "omd-managed",
+      "digest": "5504a4c8e3e8f90e62cdbee0f2fc8cac41092d843ccd8d0c65bd54ea400394e0"
+    },
+    ".claude/skills/oh-my-doc/VERSION": {
+      "ownership": "omd-managed",
+      "digest": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
+    },
+    ".claude/skills/oh-my-doc/agents/openai.yaml": {
+      "ownership": "omd-managed",
+      "digest": "596bd2b76327fe2640dfa1df0afaa7fe0ff6cea101de58ca7a8e82b4e060effc"
+    },
+    ".claude/skills/oh-my-doc/assets/AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "a754cee5c10c0d78966854119bf23999a179b7b34268114038d9463b7ef21d30"
+    },
+    ".claude/skills/oh-my-doc/assets/CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "35f6231c48b07439cdd107f91251cd06462c44745b8359c5152cd5a7c50171c8"
+    },
+    ".claude/skills/oh-my-doc/references/agent-compatibility.md": {
+      "ownership": "omd-managed",
+      "digest": "735f096ccba7a6852e7ca70c67771a0013e24a70672077ecfa5576b135a09c6c"
+    },
+    ".claude/skills/oh-my-doc/references/document-contracts.md": {
+      "ownership": "omd-managed",
+      "digest": "c2b542402219da06e5d66f5b19f7a1c093d36e85c892af3665fbc4698bd58f22"
+    },
+    ".claude/skills/oh-my-doc/references/implementation-workflow.md": {
+      "ownership": "omd-managed",
+      "digest": "cfec7fd587edfbbdf2f801d92110512d3c037a6b7337cf2acfa6663fb257ac55"
+    },
+    ".claude/skills/oh-my-doc/references/information-architecture.md": {
+      "ownership": "omd-managed",
+      "digest": "b11e4049d098d67a8f56e6ea202d8c5500acad85d850f10c621a694890ca6ad3"
+    },
+    ".claude/skills/oh-my-doc/references/methodology.md": {
+      "ownership": "omd-managed",
+      "digest": "b65a173ef2baeff29ca00be1c3d6d11916a47f9cc6d192da197e5674278e8543"
+    },
+    ".claude/skills/oh-my-doc/references/planning-workflow.md": {
+      "ownership": "omd-managed",
+      "digest": "59248f35c966b30aab225f516704fd428d5d0414ca8b9d092e09cd522142cb38"
+    },
+    ".claude/skills/oh-my-doc/runtime/adopt.mjs": {
+      "ownership": "omd-managed",
+      "digest": "e8c3fbd127d68a043f4a3fae509af6f0be025c51c795ff438433b5a3deebc00f"
+    },
+    ".claude/skills/oh-my-doc/runtime/create-document.mjs": {
+      "ownership": "omd-managed",
+      "digest": "1a5c2a4339c4a128cc8d94cae1e05c99a1258f6e65168078d95b0cce8a62901a"
+    },
+    ".claude/skills/oh-my-doc/runtime/detect.mjs": {
+      "ownership": "omd-managed",
+      "digest": "f06317263b22ccd08b0d17f6be5139a5d2d2cfcc44941486c085964a607c8c87"
+    },
+    ".claude/skills/oh-my-doc/runtime/docs-first.mjs": {
+      "ownership": "omd-managed",
+      "digest": "a6ce768373f024c22e1de1425b921a7667884582944996dd861840e3e1230611"
+    },
+    ".claude/skills/oh-my-doc/runtime/doctor.mjs": {
+      "ownership": "omd-managed",
+      "digest": "06ac97ae192520b76229e19e56eddc93e74516db71b135253e99428b6ab0e301"
+    },
+    ".claude/skills/oh-my-doc/runtime/frontmatter.mjs": {
+      "ownership": "omd-managed",
+      "digest": "fa287fce6097cb70cd64f9aed2f2639ef707ec9099e4650606feea86606a94cd"
+    },
+    ".claude/skills/oh-my-doc/runtime/fs-ops.mjs": {
+      "ownership": "omd-managed",
+      "digest": "779171304a89b22e33cb867c83a1a4ca388a1ab75fbf6481e69d35b6d3f91eba"
+    },
+    ".claude/skills/oh-my-doc/runtime/index.mjs": {
+      "ownership": "omd-managed",
+      "digest": "bcc0e3203f2001907628e075288ecbbf64893d71b58852ca5523ad1b20fc1a05"
+    },
+    ".claude/skills/oh-my-doc/runtime/inspect.mjs": {
+      "ownership": "omd-managed",
+      "digest": "b95b14e062de3445eeea8258a796176ea6efced43aed7ef48647e40b8e4a7efd"
+    },
+    ".claude/skills/oh-my-doc/runtime/markers.mjs": {
+      "ownership": "omd-managed",
+      "digest": "8ec24514083d70a14ffdff16cd45c7610a0d234d88037c287eb630a72753406c"
+    },
+    ".claude/skills/oh-my-doc/runtime/omd-contract.mjs": {
+      "ownership": "omd-managed",
+      "digest": "a9ae4bfc0aadfb65d644fb642f60c77cb2687997748bbb771acb9caa1b9b7cfd"
+    },
+    ".claude/skills/oh-my-doc/runtime/plan-init.mjs": {
+      "ownership": "omd-managed",
+      "digest": "bbf708de6ac8b67d952a820e42852be2ecbe1cc68300b309775653659d75c20a"
+    },
+    ".claude/skills/oh-my-doc/runtime/plan-setup.mjs": {
+      "ownership": "omd-managed",
+      "digest": "6f4a88abf70eda9b09f4a0e46952933a7f52ac4d8cb6a7194362494f64f42e59"
+    },
+    ".claude/skills/oh-my-doc/runtime/planning.mjs": {
+      "ownership": "omd-managed",
+      "digest": "3ea66825d9be138cc151682a97fe97147b74bcefbbcf8284b1a30b87a2e5d350"
+    },
+    ".claude/skills/oh-my-doc/runtime/skill-paths.mjs": {
+      "ownership": "omd-managed",
+      "digest": "61db09d9701160d5576bea46808c0a53f1207c486b109abfcc2262de0fdc4e7b"
+    },
+    ".claude/skills/oh-my-doc/runtime/types.mjs": {
+      "ownership": "omd-managed",
+      "digest": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    ".claude/skills/oh-my-doc/schemas/project-1.0.schema.json": {
+      "ownership": "omd-managed",
+      "digest": "1c11ba887254c0909348dddfe90f6d2b19c9c1fdc8c8a621e4b7130ad9134bcc"
+    },
+    ".claude/skills/oh-my-doc/schemas/state-1.0.schema.json": {
+      "ownership": "omd-managed",
+      "digest": "830a017458c692116441bb23e92d82a15e2976cbb16db2b3350078d206c1d864"
+    },
+    ".claude/skills/oh-my-doc/scripts/omd.mjs": {
+      "ownership": "omd-managed",
+      "digest": "7b63e88f89a2a7b41b8e521030681e48e93fd916ea8415c8af964c7a0c7ce7e9"
+    },
+    ".claude/skills/oh-my-doc/scripts/run.mjs": {
+      "ownership": "omd-managed",
+      "digest": "98044bc6bfeebdc9eb261e0f16b333be5a5f00ab56f8b52450c013c2c2b13191"
+    },
+    ".claude/skills/oh-my-doc/templates/default/AGENTS.md": {
+      "ownership": "omd-managed",
+      "digest": "b65147ea912ab628f04ba4e3faecf9849e26f42bc8b07046b224d1e480855f39"
+    },
+    ".claude/skills/oh-my-doc/templates/default/CLAUDE.md": {
+      "ownership": "omd-managed",
+      "digest": "1770747ba0886bf708f1834062c2f1c64d26527369ba011eec72e53c362e26d4"
+    },
+    ".claude/skills/oh-my-doc/templates/default/README.md": {
+      "ownership": "omd-managed",
+      "digest": "1cd5ae4832aca0edeaedb9ad57cc67d86265fd5576ac219840f810b7cf96a9c6"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/app/docs/[[...slug]]/page.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3139a319936f339429e724083ca446a4eecc60e00420f110bf81676fd3e737a5"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/app/docs/layout.tsx": {
+      "ownership": "omd-managed",
+      "digest": "978c406b54bbc28b2c43a797ac3d29d18e9884f92177d94d4f8d4025e17b5c54"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/app/global.css": {
+      "ownership": "omd-managed",
+      "digest": "9cb078ccf49421c25ddead0d403b38028fa84207622fe2607cf3968bbd58e989"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/app/layout.tsx": {
+      "ownership": "omd-managed",
+      "digest": "5e45abbd41e51507e85a188fab11dda0dbb5271cd1fab20b191d37ea619b3ed0"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/app/md/[[...slug]]/route.ts": {
+      "ownership": "omd-managed",
+      "digest": "f9b4f0d23ebddffb7a5ca4c6c233e14dd9b7042eca471d28c2166fc70506d250"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/app/page.tsx": {
+      "ownership": "omd-managed",
+      "digest": "f11990d0477cdb963baa299d611bbdcc6235e200688d4a262c5be84ac7f2dab3"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/development/adr/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "4b2d00d64323bebf76b0c9bacbf797d9cccc97a91b3a170828d1ea6de224f807"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/development/adr/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "892d75c675d3008fd4c10c7333731dab5e848fe356913b53db69acc8562fecb7"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/development/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "7e916a4643c510bde7bd273e9f59b7747c7e5d17b9b00f28283386c5e59b6999"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/development/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "3a6c29b95c25508e1bd2dac8c67406d5f0b0944b07f6d768f67f0713276a5518"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/development/plans/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "1193fdb9b25c5fb51654ce7caa0e04a634443c1d391c8a47dbe2bbb142b2a559"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/development/plans/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "8ad3271ba2ef47bffb8d50481e7e06a1a07dbc290d4fc411b6cbf327245001df"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "cdd0c2181f7813c99c565fca71463034a4071156769fbec50a5363eb24710100"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "de978ecf8f52c7141d50ea91300a4d5b158efaf05bfd6a889ae670385882ff94"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/planning/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "d4dee14ad31c5366043e6d213fb12b402c77021b7f1aa6b3ec1fc0dd94afabe2"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/planning/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "7fe139b87c52d981867ddd2f85cc9c0f5b7dc5429f581063fc8b289dcca771ee"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/planning/prds/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "2c96dbb0a849e4b10936a9cc2fad50b8a55a4d7e359ed7dffc26e23f7c9550c2"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/planning/prds/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "c508eea76f928ec851f15904db16037520e2c8635233d7b48706e2d368d2c73a"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/planning/stories/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "f0b31d65167d10c032117bdd6840a56d9f22a6e4b97b1bc201acc86ddacd9317"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/planning/stories/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "9fb95791c23168cbb9c2501677b373678ff88b45f016919dd90581f430291fd7"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/spec/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "c195c2284d49be572411e0598e109c4f84a6d0768d6f14376f5674856035ab4e"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/spec/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "9d3d039e72ee7f483ee581098c643dc752aa4b871fd1e416b63fb321fa82098c"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/starting/index.mdx": {
+      "ownership": "omd-managed",
+      "digest": "c008ad5e1b5027e4eac6af7fe3ad645f9873ed1c1656197364570bb30adf2910"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/starting/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "38885e7375e5f06c01db56bb201ac9f55395efe4671b5f25e379c32eb5674038"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/vision.mdx": {
+      "ownership": "omd-managed",
+      "digest": "b5530c232b026a8f23cb715c95b2edf683c662efc785d1616b655f0669629f8c"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/workflow/development.mdx": {
+      "ownership": "omd-managed",
+      "digest": "960ba7a53430b23e5eb8a34620998829acb70c9954f592776e874abe75eeb1a2"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/workflow/meta.json": {
+      "ownership": "omd-managed",
+      "digest": "dfb307a758d410cacb0bfd1b9549fb2d7fe31d91a2245f0313b608d69fc85038"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/content/docs/workflow/planning.mdx": {
+      "ownership": "omd-managed",
+      "digest": "64fe5a88c8649d0843387074797272a115c4394aca7707b17d17f218500bde7b"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/lib/layout.shared.tsx": {
+      "ownership": "omd-managed",
+      "digest": "e87213337a127cb7c28544b8767127501a8b62acf008415ced9a9bd2d8d00dc7"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/lib/source.ts": {
+      "ownership": "omd-managed",
+      "digest": "a0aca1ac5e91c1a6d28b9fba4658c26d5f04f6a9ec6ecbc72a8675b730f08584"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/next-env.d.ts": {
+      "ownership": "omd-managed",
+      "digest": "2ab3cee659ad146fb941d7420316fc2551863a2aec790736929b4ecdfc6cf24c"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/next.config.mjs": {
+      "ownership": "omd-managed",
+      "digest": "5eb4ff3fea71df51aa67fe8d296d70ad89b1103a301489bcaf74858af172c59e"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/package.json": {
+      "ownership": "omd-managed",
+      "digest": "ba2ac66c389953037247a6a42c7bf73eff895950aff55c12467f4a3d932fba68"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/postcss.config.mjs": {
+      "ownership": "omd-managed",
+      "digest": "4cae941be9bc3bee9a6905e47ea7a51aee216d587d34a8cc4ae48f78fd6d8159"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/scripts/check-planning.ts": {
+      "ownership": "omd-managed",
+      "digest": "1534d9d0bdc0cc472a0ba337b45b9faf10fbdd2b8e4e4d2fd32ffb76412dba44"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/scripts/planning-validation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "794095e28c0019217d5858501b64888905b394172ff8a10b19551b1368609b63"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/scripts/planning-validation.ts": {
+      "ownership": "omd-managed",
+      "digest": "2271096775c5cd8391c56e5185813f84373efb0a6184419b3f29a6e50ba3fbcc"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/source.config.ts": {
+      "ownership": "omd-managed",
+      "digest": "493aed7454b2510309a9d046aea8e8fbaa67816a61254b29a5abcca5648f1da3"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/templates/adr.mdx": {
+      "ownership": "omd-managed",
+      "digest": "47278df23f15738b9e939365b6e9b9c585731b6802328d03bc728f20efe5153d"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/templates/implementation-plan.mdx": {
+      "ownership": "omd-managed",
+      "digest": "892592f742f5cf4c93c8c8aab3d06fd87bb7c68d9c85931d4e151ad1abbe801b"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/templates/prd.mdx": {
+      "ownership": "omd-managed",
+      "digest": "da54d81f1f3b095cfdccf3fc1e0dac7223b1e2df2cae9d5de679c38c2238f8d5"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/templates/spec.mdx": {
+      "ownership": "omd-managed",
+      "digest": "46db6f37daf895bd9058ac004d3f0abbfaf148c86102603460cd16b497b90bdf"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/templates/user-story.mdx": {
+      "ownership": "omd-managed",
+      "digest": "306719713db2347582cb38c7766867b06534e29161f905ff8b122741d8d7b627"
+    },
+    ".claude/skills/oh-my-doc/templates/default/docs/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "ba69f67420437dbd4b9de486a67e5be423cea693ed1f246285ccb4950142b563"
+    },
+    ".claude/skills/oh-my-doc/templates/default/gitignore": {
+      "ownership": "omd-managed",
+      "digest": "d4b5e641f826a29f88829b2694a7b8f34479af703839ab49cf37aff0f76e4a9e"
+    },
+    ".claude/skills/oh-my-doc/templates/default/package.json": {
+      "ownership": "omd-managed",
+      "digest": "58b402410bcae1bb31b646c95820d2a009f05166f91c6a390954dccceceb6b8a"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/package.json": {
+      "ownership": "omd-managed",
+      "digest": "4c92f69be1c7c55b5ea6c24c76f725ea24176c12f94be6009d3fc979f1b18716"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/canvas.tsx": {
+      "ownership": "omd-managed",
+      "digest": "318f1443dbaa0f45a9569955b92a7b388b958f68166daa3ad103f78b90b8ef59"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/decision.tsx": {
+      "ownership": "omd-managed",
+      "digest": "200bb80e53054da96e69be6606523328bfb3801b10283c380a2d6713bcb1caed"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/doc-kind.tsx": {
+      "ownership": "omd-managed",
+      "digest": "256d7d219288fdfbb0a280e7b2c447bfee4c74ea139b2b16d05e6ae5cadd39d5"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/doc-status.tsx": {
+      "ownership": "omd-managed",
+      "digest": "01b4c9f6f4bbdda7bfe534b25b951ac87014e1b0a1573c5988284b70d763f087"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/inline-toc.tsx": {
+      "ownership": "omd-managed",
+      "digest": "a7575d1502a4a8bb7c190c0c5cda33f6ace413bc88a7e97c2c8c0875d250cd40"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/sidebar-folder.tsx": {
+      "ownership": "omd-managed",
+      "digest": "111878de76966e1a7bd918e3f080822e5d3bf845fc07f16d98b31910f1d10baf"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/components/spec-version.tsx": {
+      "ownership": "omd-managed",
+      "digest": "c1ab3c2fe298dadc880ae107c8f8a4d98e91bed20e12839f5e634911cb40e3fe"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/doc-kinds.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "d9dd334ff509e4fe208ed917669503de42b79722eab4e788ac6b79d1a3617241"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/doc-kinds.ts": {
+      "ownership": "omd-managed",
+      "digest": "4d3b57853322ea902dc8147fc44f819ad5b13221e7c32e7d91db2bf8057a8c0b"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/fumadocs.ts": {
+      "ownership": "omd-managed",
+      "digest": "58295e3cd6d3c75a2446bc6e3d5cfcd74f17a6afbd0cd76a4e840739dcf11598"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/index.ts": {
+      "ownership": "omd-managed",
+      "digest": "23eb710eefaec53e907c33d911aeb16d4c34fc0bc91dc8ab00bb190f434815f4"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/lib/classes.ts": {
+      "ownership": "omd-managed",
+      "digest": "5bd5364cb66a68d14bf40a40d603fe735ccaf5f1605c4d0d1b243a813b7cf568"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/mdx.tsx": {
+      "ownership": "omd-managed",
+      "digest": "3ec28b9f4cb0b08c592a9fc39c18ed7b6bb6d1b7dcdbc023019b1d0deeedd297"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/navigation.test.ts": {
+      "ownership": "omd-managed",
+      "digest": "09d410c56913797be35f58f5d783cde5f12dca41a46f9f4e7026f898b3055379"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/navigation.ts": {
+      "ownership": "omd-managed",
+      "digest": "b0fb5d8222346aaa74d5d718d147fb60f52b5889ea8edc7b9b66d64594d3d0bd"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/src/provider.ts": {
+      "ownership": "omd-managed",
+      "digest": "7e27fdbdffe4dbd63298ede617e9947c825ac93e9f39eb661b7c9febcdb4ead2"
+    },
+    ".claude/skills/oh-my-doc/templates/default/packages/ui/tsconfig.json": {
+      "ownership": "omd-managed",
+      "digest": "e8e9b72fea06996119ac666a391e954fdf112f78784fe05cc1d1e8eb393a42c9"
+    },
+    ".claude/skills/oh-my-doc/templates/default/pnpm-workspace.yaml": {
+      "ownership": "omd-managed",
+      "digest": "4a9579173b1975cc2968e767b425c78aecf438ff05c64d15257f18027c2ef400"
+    },
+    ".claude/skills/oh-my-doc/templates/default/tsconfig.base.json": {
+      "ownership": "omd-managed",
+      "digest": "bdf7e03a5d5eeb69c667b175d1d725ebc34c1bb657c6233b685aee7c470a4892"
+    },
+    ".claude/skills/oh-my-doc/templates/default/turbo.json": {
+      "ownership": "omd-managed",
+      "digest": "c450d42d8503484cedf827b549a7d40ec50cfbd70382e8fb32f6127cb8e478dd"
+    },
+    ".claude/skills/oh-my-doc/tests/runtime.test.mjs": {
+      "ownership": "omd-managed",
+      "digest": "6b0b229244b554590a7f9eafd71ac4052e3ec29c585188d3ac01775baf43f60f"
+    }
+  }
+}
