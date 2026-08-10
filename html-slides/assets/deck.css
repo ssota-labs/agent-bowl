@@ -1,0 +1,171 @@
+/* html-slides — 슬라이드 베이스 프레임워크 (1280×720 / 16:9)
+ *
+ * 덱마다 :root 변수만 갈아끼우면 톤이 완전히 바뀐다.
+ * 레이아웃 클래스는 "출발점"일 뿐 — 슬라이드마다 다른 구성을 쓰는 게 원칙이다.
+ */
+
+:root {
+  /* 캔버스 */
+  --slide-w: 1280px;
+  --slide-h: 720px;
+  --pad: 64px;
+
+  /* 팔레트 — 덱마다 반드시 교체할 것 (references/design.md 참고) */
+  --bg: #ffffff;
+  --bg-alt: #f4f6f8;
+  --ink: #14181d;
+  --ink-2: #4a5560;
+  --ink-3: #8b95a1;
+  --line: #dfe3e8;
+
+  --brand: #1e2761;   /* 지배색 60–70% */
+  --brand-2: #cadcfc; /* 보조색 */
+  --accent: #f96167;  /* 강조색 — 아주 조금만 */
+  --on-brand: #ffffff;
+
+  /* 타이포 */
+  --font-head: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-body: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-num: "Pretendard", ui-rounded, -apple-system, system-ui, sans-serif;
+
+  --fs-title: 52px;
+  --fs-sub: 22px;
+  --fs-head: 28px;
+  --fs-body: 19px;
+  --fs-small: 15px;
+  --fs-cap: 14px;
+  --fs-kpi: 76px;
+
+  --gap: 28px;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #eceef1;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-body);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide {
+  position: relative;
+  flex: none;
+  width: var(--slide-w);
+  height: var(--slide-h);
+  overflow: hidden;
+  background: var(--bg);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* 어두운 슬라이드 (표지/결론) */
+.slide.dark {
+  background: var(--brand);
+  color: var(--on-brand);
+  --ink: var(--on-brand);
+  --ink-2: rgba(255, 255, 255, .78);
+  --ink-3: rgba(255, 255, 255, .55);
+  --line: rgba(255, 255, 255, .22);
+  --bg-alt: rgba(255, 255, 255, .08);
+}
+
+/* ---------------------------------------------------------------- 텍스트 */
+
+.t-title    { font-family: var(--font-head); font-size: var(--fs-title); font-weight: 800; line-height: 1.14; letter-spacing: -0.025em; margin: 0; }
+.t-sub      { font-size: var(--fs-sub); font-weight: 500; color: var(--ink-2); line-height: 1.45; margin: 0; }
+.t-head     { font-family: var(--font-head); font-size: var(--fs-head); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; margin: 0; }
+.t-body     { font-size: var(--fs-body); line-height: 1.6; color: var(--ink-2); margin: 0; }
+.t-small    { font-size: var(--fs-small); line-height: 1.55; color: var(--ink-2); margin: 0; }
+.t-cap      { font-size: var(--fs-cap); line-height: 1.5; color: var(--ink-3); margin: 0; }
+.t-eyebrow  { font-size: var(--fs-cap); font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0; }
+.t-kpi      { font-family: var(--font-num); font-size: var(--fs-kpi); font-weight: 800; line-height: 1; letter-spacing: -0.03em; margin: 0; font-variant-numeric: tabular-nums; }
+.em         { color: var(--accent); }
+.strong     { color: var(--ink); font-weight: 700; }
+
+/* -------------------------------------------------------------- 레이아웃 */
+
+.row     { display: flex; gap: var(--gap); }
+.col     { display: flex; flex-direction: column; gap: var(--gap); }
+.fill    { flex: 1; min-width: 0; min-height: 0; }
+.between { justify-content: space-between; }
+.center  { align-items: center; }
+.grid-2  { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--gap); }
+.grid-3  { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
+.grid-4  { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap); }
+
+/* 슬라이드 헤더 */
+.s-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.s-num  { font-size: var(--fs-cap); font-weight: 700; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* 카드 */
+.card {
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.card.outline { background: transparent; border: 1.5px solid var(--line); }
+.card.brand   { background: var(--brand); color: var(--on-brand); }
+.card.brand .t-body, .card.brand .t-small { color: rgba(255, 255, 255, .8); }
+/* 한 면만 두꺼운 테두리 — 덱 전체에 반복하는 모티프로 쓰기 좋다 */
+.card.edge { border-left: 5px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; }
+
+/* 아이콘 칩 */
+.chip {
+  flex: none;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--brand); color: var(--on-brand);
+  font-size: 19px; font-weight: 800;
+}
+.chip.accent { background: var(--accent); }
+
+/* 스텝 / 타임라인 */
+.steps { display: flex; align-items: stretch; gap: 12px; }
+.step  { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 20px; background: var(--bg-alt); border-radius: var(--radius); min-width: 0; }
+.step .n { font-size: var(--fs-cap); font-weight: 800; color: var(--accent); letter-spacing: .1em; }
+
+/* 목록 — 기본 불릿 대신 커스텀 마커 */
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.list li { position: relative; padding-left: 26px; font-size: var(--fs-body); line-height: 1.55; color: var(--ink-2); }
+.list li::before {
+  content: ""; position: absolute; left: 4px; top: .55em;
+  width: 8px; height: 8px; border-radius: 2px; background: var(--accent);
+}
+
+/* 표 */
+.tbl { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+.tbl th { text-align: left; font-weight: 700; color: var(--ink-3); font-size: var(--fs-cap); letter-spacing: .04em; padding: 0 14px 10px 0; border-bottom: 1.5px solid var(--line); }
+.tbl td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.tbl td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
+
+/* 푸터 / 출처 */
+.s-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: var(--fs-cap); color: var(--ink-3); }
+
+/* 전면 배경 요소 (data-overlap-ok 와 함께 쓸 것) */
+.bleed { position: absolute; inset: 0; }
+.bleed-r { position: absolute; top: 0; right: 0; bottom: 0; width: 44%; }
+.bleed-l { position: absolute; top: 0; left: 0; bottom: 0; width: 44%; }
+
+/* 막대 차트 (순수 CSS) — 막대 높이는 <i style="--v:72%"> 로 준다 */
+.bars { display: flex; align-items: stretch; gap: 18px; height: 100%; }
+.bars .b { position: relative; flex: 1; display: flex; flex-direction: column; min-width: 0; padding-bottom: 28px; }
+.bars .b i { flex: 0 0 var(--v, 50%); margin-top: auto; width: 100%; background: var(--brand-2); border-radius: 6px 6px 0 0; }
+.bars .b.on i { background: var(--accent); }
+.bars .b span { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: var(--fs-cap); color: var(--ink-3); white-space: nowrap; }
