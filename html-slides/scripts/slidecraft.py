@@ -63,6 +63,105 @@ def evaluate(expr):
 
 # -------------------------------------------------------------------- 경로
 
+DECKS_DIR = ".html-slides"      # 덱 작업 파일은 작업 폴더의 이 숨김 폴더 안에 둔다
+SCAN_DEPTH = 5
+
+
+def scan_roots():
+    """덱을 찾아볼 뿌리들.
+
+    보통은 스킬이 놓인 폴더의 부모가 사용자의 작업 폴더다. 다만 하위 프로젝트에서
+    작업하는 중이면 위쪽 폴더의 덱도 보여야 하므로, .html-slides/ 를 가진 조상도
+    같이 뿌리로 잡는다.
+    """
+    out = []
+
+    def add(p):
+        p = p.resolve()
+        if p.is_dir() and p not in out:
+            out.append(p)
+
+    here = Path.cwd().resolve()
+    add(here)
+    for anc in here.parents:
+        if (anc / DECKS_DIR).is_dir():
+            add(anc)
+    add(SKILL_DIR.parent)
+    return out
+
+
+def find_decks(roots=None):
+    """deck.json 을 훑어 덱 목록을 만든다. 목록을 파일로 저장하지 않는다 —
+    저장하면 사용자가 폴더를 지웠을 때 유령 항목이 남는다."""
+    seen, out = set(), []
+    skill = SKILL_DIR.resolve()
+    for root in (roots or scan_roots()):
+        if not root.is_dir():
+            continue
+        stack = [(root, 0)]
+        while stack:
+            d, depth = stack.pop()
+            if (d / "deck.json").is_file():
+                r = d.resolve()
+                # 스킬이 들고 있는 예시 덱은 사용자 덱이 아니다
+                if r == skill or skill in r.parents:
+                    continue
+                if r not in seen:
+                    seen.add(r)
+                    out.append(r)
+                continue                      # 덱 안쪽은 더 들어가지 않는다
+            if depth >= SCAN_DEPTH:
+                continue
+            try:
+                kids = list(d.iterdir())
+            except OSError:
+                continue
+            for k in kids:
+                if k.is_dir() and k.name not in ("dist", ".slidecraft", "node_modules",
+                                                 ".git", "__pycache__"):
+                    stack.append((k, depth + 1))
+    return out
+
+
+def find_deck(arg: str) -> Path:
+    """'<경로>' 든 '월간보고' 든 덱 폴더로 바꾼다.
+
+    사용자는 경로를 모른다. 덱 이름만 말해도 찾아지게 한다.
+    """
+    p = Path(arg)
+    if p.exists():
+        return deck_root(p)
+    if not p.is_absolute() and os.sep not in arg:
+        here = Path.cwd() / DECKS_DIR / arg
+        if (here / "deck.json").exists():
+            return here.resolve()
+        hits = [d for d in find_decks() if d.name == arg]
+        if len(hits) == 1:
+            return hits[0]
+        if len(hits) > 1:
+            sys.exit("[slidecraft] 같은 이름의 덱이 여러 개다:\n  " +
+                     "\n  ".join(str(h) for h in hits))
+    known = find_decks()
+    msg = f"[slidecraft] 덱을 찾지 못했다: {arg}"
+    if known:
+        msg += "\n  있는 덱: " + ", ".join(sorted(d.name for d in known))
+    sys.exit(msg)
+
+
+def resolve_target(arg: str) -> Path:
+    """map/shot/qa 처럼 슬라이드 파일도 덱도 받는 명령용."""
+    p = Path(arg)
+    return p if p.exists() else find_deck(arg)
+
+
+def new_deck_path(arg: str) -> Path:
+    """`new` 가 만들 위치. 이름만 주면 작업 폴더의 .html-slides/ 아래로 간다."""
+    p = Path(arg)
+    if p.is_absolute() or os.sep in arg:
+        return p.resolve()
+    return (Path.cwd() / DECKS_DIR / arg).resolve()
+
+
 def deck_root(p: Path) -> Path:
     p = p.resolve()
     if p.is_file():
@@ -145,7 +244,7 @@ THEME = """/* {deck} — 덱 전용 테마. deck.css 대신 이 파일만 고친
 
 
 def cmd_new(a):
-    root = Path(a.deck).resolve()
+    root = new_deck_path(a.deck)
     (root / "slides").mkdir(parents=True, exist_ok=True)
     (root / "assets").mkdir(exist_ok=True)
     for f in ("deck.css", "regions.css", "regions.js", "worldmap.css"):
@@ -159,12 +258,12 @@ def cmd_new(a):
         (root / "slides" / "01-title.html").write_text(
             TEMPLATE.format(no="01", title=a.title, deck=a.title))
     print(f"[slidecraft] 덱 생성: {root}")
-    print(f"  slides/  ← 슬라이드 1장 = 파일 1개")
-    print(f"  assets/theme.css ← 팔레트/폰트는 여기서 수정")
+    print(f"  덱 이름: {root.name}   ← 사용자에게 이 이름을 알려줄 것")
+    print(f"  다음부터는 경로 대신 이름만 줘도 된다:  preview {root.name}")
 
 
 def cmd_add(a):
-    root = deck_root(Path(a.deck))
+    root = find_deck(a.deck)
     c = cfg(root)
     existing = slides_of(root)
     no = f"{len(existing) + 1:02d}"
@@ -203,7 +302,7 @@ def fmt_map(m, rel):
 
 
 def cmd_map(a):
-    target = Path(a.target)
+    target = resolve_target(a.target)
     root = deck_root(target)
     c = cfg(root)
     files = slides_of(target)
@@ -242,7 +341,7 @@ def cmd_map(a):
 # ---------------------------------------------------------------- 스크린샷
 
 def cmd_shot(a):
-    target = Path(a.target)
+    target = resolve_target(a.target)
     root = deck_root(target)
     c = cfg(root)
     outdir = Path(a.outdir) if a.outdir else root / ".slidecraft" / "shots"
@@ -272,7 +371,7 @@ def cmd_shot(a):
 # ---------------------------------------------------------------------- QA
 
 def cmd_qa(a):
-    target = Path(a.target)
+    target = resolve_target(a.target)
     root = deck_root(target)
     c = cfg(root)
     results = []
@@ -435,7 +534,7 @@ def render_deck(root: Path, clean=False):
 
 
 def cmd_build(a):
-    root = deck_root(Path(a.deck))
+    root = find_deck(a.deck)
     html, n = render_deck(root, a.clean)
     dist = root / "dist"
     dist.mkdir(exist_ok=True)
@@ -556,7 +655,7 @@ def cmd_worldmap(a):
         out.write_text(block + "\n")
         print(f"[slidecraft] 지도 조각: {out}")
     else:
-        root = deck_root(Path(a.target))
+        root = find_deck(a.target)
         if not (root / "deck.json").exists():
             sys.exit("[slidecraft] 덱을 찾지 못했다 — 먼저 `new` 로 만들거나 --svg-only 를 쓸 것")
         css = root / "assets" / "worldmap.css"
@@ -576,6 +675,35 @@ def cmd_worldmap(a):
     hi = ", ".join(meta["highlight_cc"] + meta["highlight_cont"]) or "없음"
     print(f"  경로 {sum(meta['counts'].values())}개 · {meta['bytes'] / 1024:.0f}KB"
           f" · 초점 {meta['focus']} · 호버 {meta['hover']} · 하이라이트 {hi}")
+
+
+def cmd_decks(a):
+    import datetime
+    rows = []
+    for d in find_decks():
+        c = cfg(d)
+        slides = slides_of(d)
+        times = [p.stat().st_mtime for p in slides] + [(d / "deck.json").stat().st_mtime]
+        rows.append({
+            "name": d.name,
+            "title": c.get("title", d.name),
+            "slides": len(slides),
+            "updated": datetime.datetime.fromtimestamp(max(times)).strftime("%m-%d %H:%M"),
+            "path": str(d),
+        })
+    rows.sort(key=lambda r: r["updated"], reverse=True)
+
+    if a.json:
+        print(json.dumps(rows, ensure_ascii=False, indent=2))
+        return
+    if not rows:
+        print("[slidecraft] 덱이 없다. `new <이름>` 으로 만든다")
+        return
+    w = max(len(r["title"]) for r in rows)
+    print(f'{"제목".ljust(w)}  장수  마지막 수정   이름')
+    for r in rows:
+        print(f'{r["title"].ljust(w)}  {r["slides"]:>3}  {r["updated"]}  {r["name"]}')
+    print(f"\n{len(rows)}개. 고치려면: preview <이름>")
 
 
 # ------------------------------------------------------------------ 라이브 프리뷰
@@ -812,9 +940,7 @@ def cmd_preview(a):
     import threading
     import webbrowser
 
-    root = deck_root(Path(a.deck))
-    if not (root / "deck.json").exists():
-        sys.exit(f"[slidecraft] 덱을 찾지 못했다: {a.deck} — 먼저 `new` 로 만들 것")
+    root = find_deck(a.deck)
     c = cfg(root)
     w, h = c["size"]
 
@@ -872,7 +998,9 @@ def cmd_preview(a):
                     html, _ = render_deck(root, clean=True)
                     # HTTP 헤더는 latin-1 이라 한글 제목을 그대로 넣으면 응답이 깨진다.
                     # ASCII 대체 이름 + RFC 5987 로 한글 이름을 함께 보낸다.
-                    title = c.get("title", root.name)
+                    import datetime
+                    stamp = datetime.datetime.now().strftime("%m-%d %H%M")
+                    title = f'{c.get("title", root.name)} ({stamp})'
                     utf8 = urllib.parse.quote(
                         re.sub(r'[\\/:*?"<>|]+', "_", title).strip() or "deck")
                     ascii_name = re.sub(r'[^A-Za-z0-9._-]+', "_", title).strip("_") or "deck"
@@ -920,7 +1048,7 @@ def cmd_preview(a):
 def cmd_pdf(a):
     """슬라이드를 2배 해상도 PNG 로 찍어 정확한 16:9 페이지의 PDF 로 묶는다.
     (브라우저 인쇄 PDF 는 용지 크기가 Letter 로 고정돼 슬라이드 비율이 깨진다)"""
-    root = deck_root(Path(a.deck))
+    root = find_deck(a.deck)
     c = cfg(root)
     w, h = c["size"]
     scale = a.scale
@@ -967,6 +1095,9 @@ def main():
 
     p = sub.add_parser("qa"); p.add_argument("target"); p.add_argument("--json", action="store_true")
     p.set_defaults(fn=cmd_qa)
+
+    p = sub.add_parser("decks", help="만들어 둔 덱 목록 (저장하지 않고 훑는다)")
+    p.add_argument("--json", action="store_true"); p.set_defaults(fn=cmd_decks)
 
     p = sub.add_parser("preview", help="라이브 미리보기 서버 (브라우저 자동 실행 · 자동 새로고침)")
     p.add_argument("deck"); p.add_argument("--port", type=int, default=7373)
