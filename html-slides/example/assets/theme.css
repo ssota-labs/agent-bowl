@@ -1,0 +1,15 @@
+/* 2026 성장 전략 — 덱 전용 테마. deck.css 대신 이 파일만 고친다.
+   색은 주제에 맞게 반드시 새로 고를 것 (references/design.md). */
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f3f5f8;
+  --ink: #14181d;
+  --ink-2: #4a5560;
+  --ink-3: #8b95a1;
+  --line: #dfe3e8;
+
+  --brand: #1e2761;
+  --brand-2: #cadcfc;
+  --accent: #f96167;
+  --on-brand: #ffffff;
+}

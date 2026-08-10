@@ -1,0 +1,54 @@
+/* html-slides — 선택 모드(오버레이 + 주소록) 전용 스타일.
+   원본 슬라이드 스타일은 절대 건드리지 않는다. */
+
+#rg-layer { font-family: -apple-system, "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif; }
+
+#rg-legend {
+  width: 1280px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  margin: 12px auto 24px;
+  padding: 14px 18px 16px;
+  background: #fff;
+  border: 1px solid #d9dce1;
+  border-radius: 10px;
+  font-family: -apple-system, "Apple SD Gothic Neo", "Pretendard", system-ui, sans-serif;
+  color: #1c2024;
+}
+#rg-legend h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+#rg-legend table { width: 100%; border-collapse: collapse; font-size: 13px; }
+#rg-legend th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 8px 6px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+#rg-legend td {
+  padding: 6px 8px 6px 0;
+  border-bottom: 1px solid #f1f2f4;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+#rg-legend td.tx { white-space: normal; color: #4b5563; }
+#rg-legend code { font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #111827; }
+#rg-legend .sw {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: -2px;
+}
+#rg-legend .warn { margin: 10px 0 0; font-size: 12px; font-weight: 700; color: #b45309; }
+
+/* 선택 모드 토글이 슬라이드 위치를 바꿔서는 안 된다.
+   따라서 rg-on 은 레이아웃에 영향을 주는 어떤 규칙도 갖지 않는다. */
