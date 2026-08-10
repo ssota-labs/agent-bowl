@@ -1,0 +1,207 @@
+/* worldmap.css — 세계지도 블록(.wm) 스타일.
+   색은 전부 변수로 빠져 있다. 덱마다 바꾸고 싶으면 theme.css 에서 이 변수만 덮어쓴다.
+   (이 파일 자체는 고치지 않는다 — deck.css 와 같은 취급) */
+
+/* 기본값은 :root 에 선언하지 않는다. worldmap.css 는 theme.css 보다 뒤에 로드되므로
+   여기서 --wm-* 를 선언해 버리면 사용자가 theme.css 에 써 둔 값을 조용히 덮어쓴다.
+   대신 쓰는 자리마다 var(--wm-x, 기본값) 폴백으로 둔다 — 로드 순서와 무관해진다.
+
+   덮어쓸 수 있는 변수:
+     --wm-land   기본 육지        (기본 --brand-2)
+     --wm-stroke 나라 경계선      (기본 --bg)
+     --wm-on     하이라이트       (기본 --brand)
+     --wm-hover  마우스 올린 곳   (기본 --accent)
+     --wm-sea    바다(--sea 일 때)(기본 --brand)
+     --wm-ink    범례 글자        (기본 --ink-2)
+     --wm-speed  전환 속도        (기본 .22s)                                    */
+
+/* 어두운 슬라이드(.slide.dark)에서는 육지를 한 단계 띄운다 */
+.slide.dark {
+  --wm-land: rgba(255, 255, 255, .20);
+  --wm-stroke: transparent;
+  --wm-on: var(--brand-2);
+}
+
+/* ------------------------------------------------------------------ 컨테이너 */
+
+.wm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.wm-svg {
+  display: block;
+  /* SVG 에 width/height 가 viewBox 와 같게 박혀 있다. 여기서 늘리지 말고
+     최대치만 걸어 두면 브라우저가 비율을 지키며 축소한다 = contain.
+     width:100%/height:100% 로 채우면 프레임 밖 지역이 드러난다. */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* 바다를 칠하는 패널형 (밝은 슬라이드에서 지도를 도드라지게 할 때) */
+.wm[data-sea="on"] {
+  background: var(--wm-sea, var(--brand));
+  border-radius: var(--radius);
+  padding: 10px;
+  overflow: hidden;
+}
+
+.wm[data-sea="on"] {
+  --wm-land: rgba(255, 255, 255, .22);
+  --wm-stroke: transparent;
+  --wm-on: var(--brand-2);
+}
+
+/* ------------------------------------------------------------------ 육지 */
+
+.wm-land {
+  fill: var(--wm-land, var(--brand-2));
+  stroke: var(--wm-stroke, var(--bg));
+  stroke-width: .5;
+  vector-effect: non-scaling-stroke;
+  transition: fill var(--wm-speed, .22s) ease;
+}
+
+/* 하이라이트 — 나라 단위(path.is-on) / 대륙 단위(g.is-on) */
+.wm-land.is-on,
+.wm-c.is-on > .wm-land {
+  fill: var(--wm-on, var(--brand));
+}
+
+/* 남극은 기본으로 죽여 둔다 (거의 항상 장식일 뿐) */
+.wm-c-an > .wm-land {
+  fill: var(--wm-land, var(--brand-2));
+  opacity: .45;
+}
+
+/* ------------------------------------------------------------------ 호버 */
+
+.wm[data-hover="continent"] .wm-c { cursor: pointer; }
+.wm[data-hover="continent"] .wm-c:hover > .wm-land { fill: var(--wm-hover, var(--accent)); }
+
+.wm[data-hover="country"] .wm-land { cursor: pointer; }
+.wm[data-hover="country"] .wm-land:hover { fill: var(--wm-hover, var(--accent)); }
+
+.wm[data-hover="off"] .wm-c,
+.wm[data-hover="off"] .wm-land { cursor: default; }
+
+/* 남극은 호버 대상에서 뺀다 */
+.wm .wm-c-an { pointer-events: none; }
+
+/* 대륙마다 다른 색 (data-palette="continent").
+   기본은 accent 단색 — 디자인 원칙상 강조색은 아껴 쓴다. 범례가 필요한 발표에서만 켤 것. */
+.wm[data-palette="continent"] { --wm-na: #f96167; --wm-sa: #f9a050; --wm-eu: #5ba4f9;
+                                --wm-af: #f9dc50; --wm-as: #50d98a; --wm-oc: #b05df9; }
+
+.wm[data-palette="continent"][data-hover="continent"] .wm-c-na:hover > .wm-land { fill: var(--wm-na); }
+.wm[data-palette="continent"][data-hover="continent"] .wm-c-sa:hover > .wm-land { fill: var(--wm-sa); }
+.wm[data-palette="continent"][data-hover="continent"] .wm-c-eu:hover > .wm-land { fill: var(--wm-eu); }
+.wm[data-palette="continent"][data-hover="continent"] .wm-c-af:hover > .wm-land { fill: var(--wm-af); }
+.wm[data-palette="continent"][data-hover="continent"] .wm-c-as:hover > .wm-land { fill: var(--wm-as); }
+.wm[data-palette="continent"][data-hover="continent"] .wm-c-oc:hover > .wm-land { fill: var(--wm-oc); }
+
+.wm[data-palette="continent"] .wm-c-na.is-on > .wm-land { fill: var(--wm-na); }
+.wm[data-palette="continent"] .wm-c-sa.is-on > .wm-land { fill: var(--wm-sa); }
+.wm[data-palette="continent"] .wm-c-eu.is-on > .wm-land { fill: var(--wm-eu); }
+.wm[data-palette="continent"] .wm-c-af.is-on > .wm-land { fill: var(--wm-af); }
+.wm[data-palette="continent"] .wm-c-as.is-on > .wm-land { fill: var(--wm-as); }
+.wm[data-palette="continent"] .wm-c-oc.is-on > .wm-land { fill: var(--wm-oc); }
+
+/* ------------------------------------------------------------------ 마커 / 카드
+
+   마커·카드는 반드시 <svg> 안에 넣는다. .wm 컨테이너 기준으로 HTML 을 얹으면
+   비율 유지 여백(레터박스)만큼 어긋난다 — 지도는 컨테이너를 꽉 채우지 않는다.
+   좌표는 나라 path 의 d 와 같은 좌표계다. 나라별 앵커는:
+       python3 scripts/worldmap.py --anchor KR,JP,SG                            */
+
+.wm-pin { color: var(--wm-pin, var(--accent)); pointer-events: none; }
+.wm-pin-halo { fill: currentColor; opacity: .22; }
+.wm-pin-dot {
+  fill: currentColor;
+  stroke: var(--bg);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+/* 카드(콜아웃)는 직접 짜 넣는다. 아래는 그 조각들이 쓰는 스타일 —
+   레시피는 references/maps.md 참고. */
+.wm-callout-leader {
+  stroke: var(--wm-ink, var(--ink-2));
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+.wm-callout-box {
+  fill: var(--bg);
+  stroke: var(--line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.wm-callout-title { fill: var(--ink); font-weight: 700; }
+.wm-callout-body { fill: var(--ink-2); }
+
+/* 카드 글자는 확대 배율과 무관하게 읽혀야 한다.
+   font-size 는 조각에서 viewBox 단위로 직접 준다 (maps.md 레시피 참고). */
+.wm-callout text {
+  font-family: var(--font-body, system-ui, sans-serif);
+  dominant-baseline: middle;
+}
+
+/* ------------------------------------------------------------------ 범례 */
+
+.wm-legend {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 9px 13px;
+  list-style: none;
+  max-width: 60%;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: var(--fs-cap);
+  color: var(--wm-ink, var(--ink-2));
+}
+
+.wm[data-sea="on"] .wm-legend {
+  background: color-mix(in srgb, var(--wm-sea, var(--brand)) 80%, transparent);
+  border-color: rgba(255, 255, 255, .22);
+  color: rgba(255, 255, 255, .88);
+}
+
+.wm-leg-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.wm-leg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--wm-on, var(--brand));
+  flex: none;
+}
+
+.wm[data-palette="continent"] .wm-leg-item[data-continent="na"] .wm-leg-dot { background: var(--wm-na); }
+.wm[data-palette="continent"] .wm-leg-item[data-continent="sa"] .wm-leg-dot { background: var(--wm-sa); }
+.wm[data-palette="continent"] .wm-leg-item[data-continent="eu"] .wm-leg-dot { background: var(--wm-eu); }
+.wm[data-palette="continent"] .wm-leg-item[data-continent="af"] .wm-leg-dot { background: var(--wm-af); }
+.wm[data-palette="continent"] .wm-leg-item[data-continent="as"] .wm-leg-dot { background: var(--wm-as); }
+.wm[data-palette="continent"] .wm-leg-item[data-continent="oc"] .wm-leg-dot { background: var(--wm-oc); }
+
+/* 인쇄/PDF 에서는 호버가 의미 없으니 하이라이트만 남는다 */
+@media print {
+  .wm-land { transition: none; }
+}

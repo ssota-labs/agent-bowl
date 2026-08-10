@@ -1,3 +1,5 @@
 # 생성물 — 소스만 배포한다
 dist/
 .slidecraft/
+__pycache__/
+*.pyc

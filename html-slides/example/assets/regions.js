@@ -155,6 +155,11 @@
   function regionMap() {
     var slide = slideEl();
     var sb = slide.getBoundingClientRect();
+    // 미리보기는 슬라이드를 CSS transform 으로 축소해 보여준다. 이때
+    // getBoundingClientRect 는 축소된 화면 좌표를 주는데, 오버레이는 축소되는
+    // 요소 '안쪽'에 붙으므로 좌표를 되돌려 놓지 않으면 배지·상자가 어긋난다.
+    var sk = slide.offsetWidth ? sb.width / slide.offsetWidth : 1;
+    if (!sk || !isFinite(sk)) sk = 1;
     var els = Array.prototype.slice.call(slide.querySelectorAll('[data-region]'));
 
     var used = {};
@@ -212,7 +217,10 @@
         bg: bg.self ? bg.name : '',          // 이 영역이 직접 칠한 배경색 (한국어)
         bgInherited: bg.self ? '' : bg.name, // 상위에서 물려받은 배경색
         box: box,
-        px: { x: Math.round(b.left - sb.left), y: Math.round(b.top - sb.top), w: Math.round(b.width), h: Math.round(b.height) },
+        px: {
+          x: Math.round((b.left - sb.left) / sk), y: Math.round((b.top - sb.top) / sk),
+          w: Math.round(b.width / sk), h: Math.round(b.height / sk)
+        },
         zone: zoneOf(box.x + box.w / 2, box.y + box.h / 2, box.w, box.h),
         text: txt(el),
         parts: parts
@@ -259,7 +267,9 @@
 
     var data = regionMap();
     var slide = slideEl();
-    var sb = slide.getBoundingClientRect();
+    // 레이어는 슬라이드 안쪽(스케일 전 좌표계)에 놓이므로 화면 크기가 아니라
+    // 슬라이드 자체 크기를 기준으로 계산한다.
+    var sb = { width: slide.offsetWidth, height: slide.offsetHeight };
     var focus = opts.focus || null;
 
     // 레이어를 슬라이드 안에 넣는다. 페이지 정렬·스크롤바 때문에 슬라이드가 움직여도
