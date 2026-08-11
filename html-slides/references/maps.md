@@ -145,6 +145,28 @@ python3 scripts/worldmap.py --anchor KR,JP,SG
 - 넣고 나면 **반드시 `shot` 으로 찍어 눈으로 본다.** 카드가 나라를 덮거나
   프레임 밖으로 나가는 건 `qa` 가 못 잡는다
 
+### 호버하면 카드가 뜨게
+
+CSS 만으로 된다 (JS 없음). 카드에 `data-for="KR"` 을 달고, 슬라이드 `<section>` 안에
+`<style>` 을 넣는다. `<head>` 가 아니라 **`<section>` 안**이어야 빌드에서 살아남는다.
+
+~~~html
+<style>
+  .wm-callout[data-for] { opacity: 0; transition: opacity .18s ease; pointer-events: none; }
+  .wm-svg:has([data-cc="KR"]:hover) .wm-callout[data-for="KR"] { opacity: 1; }
+</style>
+~~~
+
+나라마다 한 줄씩 필요하다 (`:has()` 로는 값을 일반화할 수 없다).
+
+**대신 발표자료에는 웬만하면 쓰지 말 것.**
+
+- **PDF·인쇄물에는 호버가 없다.** 호버에만 담은 정보는 공유하는 순간 사라진다
+- 발표 중에 청중은 마우스를 올릴 수 없다. 화면 앞의 발표자만 볼 수 있다
+
+호버 카드가 값어치를 하는 건 **사용자가 자기 화면에서 혼자 훑어볼 때**다.
+남에게 보낼 덱이라면 카드를 그냥 항상 보이게 둔다.
+
 ## 대륙 코드
 
 | 코드 | 이름 | 나라 수 |

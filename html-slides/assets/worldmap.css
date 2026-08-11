@@ -201,6 +201,11 @@
 .wm[data-palette="continent"] .wm-leg-item[data-continent="as"] .wm-leg-dot { background: var(--wm-as); }
 .wm[data-palette="continent"] .wm-leg-item[data-continent="oc"] .wm-leg-dot { background: var(--wm-oc); }
 
+/* 캡처(shot/pdf/qa) 중에는 호버를 아예 막는다.
+   agent-browser 세션이 유지되는 탓에 앞선 호출에서 지도 위에 머문 커서가
+   그대로 남아, 엉뚱한 대륙이 호버색으로 찍히거나 PDF 에 구워진다. */
+html.rg-capture .wm { pointer-events: none; }
+
 /* 인쇄/PDF 에서는 호버가 의미 없으니 하이라이트만 남는다 */
 @media print {
   .wm-land { transition: none; }

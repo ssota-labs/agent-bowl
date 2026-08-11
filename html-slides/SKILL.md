@@ -10,7 +10,7 @@ description: "HTML 기반 업무용 슬라이드(장표·발표자료·덱)를 �
 **슬라이드 작업을 시작하면(만들든 고치든) 제일 먼저 라이브 미리보기를 켠다.**
 
 ~~~bash
-python3 $S preview <덱경로>      # 브라우저가 자동으로 열린다. 백그라운드로 실행할 것
+python3 $S preview <덱이름>      # 브라우저가 자동으로 열린다. 백그라운드로 실행할 것
 ~~~
 
 사용자는 개발자가 아니다. 파일 경로를 찾지 못하고, 브라우저를 새로고침해야 한다는 것도 모른다.
@@ -34,7 +34,7 @@ python3 $S preview <덱경로>      # 브라우저가 자동으로 열린다. �
 
 판단 규칙:
 
-1. 덱이 없으면 → `new` 로 만들고 → `preview`
+1. 덱이 없으면 → `decks` 로 확인 → 정말 없으면 `new <이름>` → `preview`
 2. 덱이 있는데 미리보기가 안 떠 있으면 → `preview` (백그라운드)
 3. 이미 떠 있으면 → **다시 실행하지 않는다.** "이미 열려 있는 창이 자동으로 바뀝니다"라고 알려준다
 4. "PDF로 줘" / "파일로 줘" → 미리보기의 `PDF 저장` · `HTML 저장` 버튼을 안내한다.
@@ -83,22 +83,58 @@ python3 $S preview <덱경로>      # 브라우저가 자동으로 열린다. �
 ~~~bash
 S=<이 SKILL.md 가 있는 디렉터리>/scripts/slidecraft.py
 
-python3 $S preview <덱경로>                    # ★ 라이브 미리보기 (브라우저 자동 실행 · 자동 갱신)
-python3 $S new <덱경로> --title "제목"        # 덱 스캐폴드 (assets 복사 포함)
-python3 $S add <덱경로> <slug> --title "제목"  # 슬라이드 추가
-python3 $S worldmap <덱경로> --highlight KR,JP,US --marker KR,JP,US   # 세계지도 (핀 포함)
+python3 $S preview <덱>                        # ★ 라이브 미리보기 (브라우저 자동 실행 · 자동 갱신)
+python3 $S decks                               # ★ 만들어 둔 덱 목록
+python3 $S new <덱이름> --title "제목"         # 덱 스캐폴드 (assets 복사 포함)
+python3 $S add <덱> <slug> --title "제목"      # 슬라이드 추가
+python3 $S worldmap <덱> --highlight KR,JP,US --marker KR,JP,US   # 세계지도 (핀 포함)
 python3 $S map <덱|슬라이드.html>              # ★ 영역 주소록 (마크다운 표)
 python3 $S shot <덱|슬라이드.html> --mode both # 미리보기 + 선택모드 PNG
 python3 $S shot <슬라이드.html> --focus <id>   # 한 영역만 스포트라이트
 python3 $S shot <슬라이드.html> --mode select --grid   # 3×3 위치 격자까지
 python3 $S qa <덱|슬라이드.html>               # 넘침·겹침·여백·글자크기 자동 검사
-python3 $S build <덱경로>                      # dist/deck.html — 작업본 (선택 모드 + 툴바 포함)
-python3 $S build <덱경로> --clean              # dist/deck-share.html — ★공유본 (도구 흔적 0)
-python3 $S pdf <덱경로>                        # dist/deck.pdf (정확한 16:9)
+python3 $S build <덱>                          # dist/deck.html — 작업본 (선택 모드 + 툴바 포함)
+python3 $S build <덱> --clean                  # dist/deck-share.html — ★공유본 (도구 흔적 0)
+python3 $S pdf <덱>                            # dist/deck.pdf (정확한 16:9)
 ~~~
 
 브라우저는 전역 설치된 `agent-browser`를 쓴다. 추가 설치 필요 없음.
 결과는 `<덱>/.slidecraft/` 아래에 캐시된다 (`regions.json`, `regions.md`, `shots/`).
+
+## 덱은 어디에 만드나
+
+**작업 중인 폴더의 `.html-slides/<덱이름>/` 에 만든다.** 경로를 직접 정하지 말 것 —
+`new` 에 **이름만** 주면 알아서 그 자리에 만든다.
+
+~~~bash
+cd <사용자가 작업 중인 폴더>
+python3 $S new 월간보고 --title "월간 보고"     # → ./.html-slides/월간보고/
+python3 $S preview 월간보고                     # 이후로는 이름만으로 지목한다
+~~~
+
+~~~
+이용빈 작업/
+├── html-slides/                  ← 이 스킬
+├── .html-slides/월간보고/          ← 루트에서 작업하면 여기
+└── 프로젝트A/
+    └── .html-slides/킥오프/        ← 프로젝트A 안에서 작업하면 여기
+~~~
+
+- **숨김 폴더인 이유** — 사용자가 열어볼 파일이 아니다. 사용자가 손에 쥐는 건
+  미리보기의 `HTML 저장` 으로 받는 완성본이고, 그건 다운로드 폴더로 간다
+- **하위 프로젝트에서 작업하면 거기에 만든다.** 루트로 몰지 않는다 —
+  프로젝트마다 `월간보고` 가 있을 수 있고, 폴더를 통째로 옮길 때 원본도 따라가야 한다
+- `decks` 는 위쪽 폴더의 덱까지 같이 보여주므로, 어디서 실행하든 다 찾는다
+- 덱 이름·경로를 모르면 **`decks` 를 먼저 실행한다.** 추측해서 새로 만들지 말 것
+
+### 덱을 만들면 이름을 알려준다
+
+숨김 폴더라 **이름이 사용자가 그 덱을 부를 유일한 손잡이**다. 만든 직후 이렇게 말한다:
+
+> `월간보고` 라는 이름으로 만들었습니다. 나중에 "월간보고 고쳐줘" 라고 하시면 됩니다.
+
+사용자가 "지난번 그거" 라고 하면 `decks` 로 목록을 뽑아 확인한다. 목록이 한 개면
+그걸로 진행하고, 여러 개면 제목·수정 날짜를 보여주고 고르게 한다.
 
 ## 덱 구조
 
@@ -146,7 +182,8 @@ python3 $S pdf <덱경로>                        # dist/deck.pdf (정확한 16:
 
 ### 새로 만들 때
 
-1. `new` 로 스캐폴드 → **`preview` 를 백그라운드로 띄운다** → 사용자에게 주소를 알려준다
+1. `new <덱이름>` 으로 스캐폴드 → **`preview` 를 백그라운드로 띄운다** →
+   사용자에게 미리보기 주소와 **덱 이름**을 알려준다
 2. `assets/theme.css` 에서 **주제에 맞는 팔레트를 새로 고른다** (기본값 그대로 쓰지 말 것 — [references/design.md](references/design.md))
 3. 슬라이드 개요를 먼저 사용자와 합의 (몇 장, 각 장 메시지 한 줄)
 4. 슬라이드별로 HTML 작성 — 레이아웃 레시피는 [references/authoring.md](references/authoring.md).
@@ -158,7 +195,8 @@ python3 $S pdf <덱경로>                        # dist/deck.pdf (정확한 16:
 
 ### 고칠 때 (핵심 경로)
 
-0. 미리보기가 안 떠 있으면 먼저 `preview` 를 띄운다 (고친 결과를 사용자가 즉시 본다)
+0. 어느 덱인지 모르면 `decks` 로 목록을 뽑는다. 미리보기가 안 떠 있으면
+   `preview <덱이름>` 을 먼저 띄운다 (고친 결과를 사용자가 즉시 본다)
 1. `map` 으로 주소록을 읽는다 (이미 `.slidecraft/regions.md` 에 있으면 그걸 읽어도 된다. 단 **구조를 바꾼 뒤에는 반드시 재생성** — 번호와 색은 문서 순서를 따르므로 밀린다)
 2. 사용자 표현 → 영역 확정. 해석 규칙은 [references/addressing.md](references/addressing.md)
 3. **후보가 1개면** 그대로 진행하되, 답변 첫 줄에 확정한 영역을 되짚는다:
@@ -199,6 +237,9 @@ python3 $S pdf <덱경로>                        # dist/deck.pdf (정확한 16:
 - `deck.css` / `worldmap.css` 를 덱마다 고치기 — `theme.css` 에서 변수만 덮어쓴다
 - 자동 QA만 돌리고 스크린샷을 안 보기
 - 미리보기를 안 띄우고 작업하기 — 사용자는 파일을 열 줄 모른다
+- 덱을 아무 데나 만들기 — 반드시 작업 폴더의 `.html-slides/<이름>/` (경로 대신 이름만 준다)
+- 덱을 만들고 이름을 안 알려주기 — 숨김 폴더라 이름이 유일한 손잡이다
+- 기존 덱이 있는지 `decks` 로 확인하지 않고 새로 만들기
 - 사용자에게 `dist/deck.html` 같은 **파일 경로를 알려주고 끝내기** — 미리보기 주소와 `HTML 저장` 버튼을 안내한다
 - 슬라이드 `<head>` 안에 `<style>` 로 스타일 넣기 — **`build` 는 `<section>` 만 가져가므로 그 CSS 는 사라진다.**
   공용 스타일은 `assets/*.css`, 한 곳만 쓰는 값은 인라인 `style=""` 로
