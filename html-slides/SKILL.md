@@ -88,6 +88,8 @@ python3 $S decks                               # ★ 만들어 둔 덱 목록
 python3 $S new <덱이름> --title "제목"         # 덱 스캐폴드 (assets 복사 포함)
 python3 $S add <덱> <slug> --title "제목"      # 슬라이드 추가
 python3 $S worldmap <덱> --highlight KR,JP,US --marker KR,JP,US   # 세계지도 (핀 포함)
+python3 $S icons find 상승                     # 아이콘 찾기 (한글 키워드 가능)
+python3 $S icons get lucide:trending-up        # 슬라이드에 붙일 <svg> 조각
 python3 $S map <덱|슬라이드.html>              # ★ 영역 주소록 (마크다운 표)
 python3 $S shot <덱|슬라이드.html> --mode both # 미리보기 + 선택모드 PNG
 python3 $S shot <슬라이드.html> --focus <id>   # 한 영역만 스포트라이트
@@ -145,6 +147,7 @@ python3 $S preview 월간보고                     # 이후로는 이름만으�
 │   ├── deck.css       프레임워크 — 고치지 않는다
 │   ├── theme.css      ★ 팔레트·폰트 — 덱마다 여기만 고친다
 │   ├── worldmap.css   지도 스타일 — 색은 theme.css 의 --wm-* 변수로 덮는다
+│   ├── icons.css      아이콘 크기·색 (아이콘 데이터는 스킬에서 읽는다)
 │   ├── regions.css    선택 모드 스타일
 │   └── regions.js     런타임 (주소 계산 / 오버레이 / QA)
 ├── slides/01-*.html   슬라이드 1장 = 파일 1개  ← 실제 작업 대상
@@ -176,7 +179,8 @@ python3 $S preview 월간보고                     # 이후로는 이름만으�
    블록이 많으면 컨테이너 단위로 묶어라 (`kpi-1/2/3` 각각 말고 필요하면 `kpis` 하나로).
 5. 배경으로 깔리는 요소(`.bleed*`)에는 `data-overlap-ok` 를 붙여 겹침 경고를 끈다.
 6. 슬라이드 파일에는 `deck.css → theme.css → regions.css` 순서로 링크하고 맨 아래 `regions.js`.
-   지도가 들어가는 장은 `theme.css` 뒤에 `worldmap.css` 를 하나 더 넣는다 (`worldmap` 명령이 알아서 넣어 준다).
+   지도가 들어가는 장은 `theme.css` 뒤에 `worldmap.css` 를, 아이콘을 쓰면 `icons.css` 를 더 넣는다
+   (`worldmap` 명령은 알아서 넣어 주고, `icons.css` 는 `new` 로 만든 덱에 이미 복사돼 있다).
 
 ## 작업 흐름
 
@@ -226,6 +230,7 @@ python3 $S preview 월간보고                     # 이후로는 이름만으�
 - [references/authoring.md](references/authoring.md) — 마크업 계약, 레이아웃 레시피, CSS 클래스 목록
 - [references/design.md](references/design.md) — 팔레트/타이포/구성 원칙, 피해야 할 것
 - [references/maps.md](references/maps.md) — 세계지도: 나라/대륙 하이라이트, 지역 확대, 호버, 색 바꾸기
+- [references/icons.md](references/icons.md) — 아이콘 5세트(2만여 개) 찾기·넣기, 크기·색, 지킬 것
 - `example/` — QA 통과한 3장짜리 예시 덱 (표지 / KPI+차트 / 2×2 계획). 새 슬라이드를 짤 때 여기 마크업을 베끼는 게 가장 빠르다.
 
 ## 하지 말 것
@@ -236,6 +241,8 @@ python3 $S preview 월간보고                     # 이후로는 이름만으�
 - 사용자 표현이 모호한데 하나를 골라서 조용히 고치기 — `--focus` 로 확인부터
 - `deck.css` / `worldmap.css` 를 덱마다 고치기 — `theme.css` 에서 변수만 덮어쓴다
 - 자동 QA만 돌리고 스크린샷을 안 보기
+- 한 덱에 아이콘 세트를 섞어 쓰기 — 선 두께가 어긋나 조잡해진다. 한 세트만 고른다
+- `icons.css` 에서 `fill`/`stroke` 를 지정하기 — 선형 아이콘이 검게 칠해진다 ([icons.md](references/icons.md))
 - 미리보기를 안 띄우고 작업하기 — 사용자는 파일을 열 줄 모른다
 - 덱을 아무 데나 만들기 — 반드시 작업 폴더의 `.html-slides/<이름>/` (경로 대신 이름만 준다)
 - 덱을 만들고 이름을 안 알려주기 — 숨김 폴더라 이름이 유일한 손잡이다

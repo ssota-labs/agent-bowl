@@ -253,7 +253,7 @@ def cmd_new(a):
     root = new_deck_path(a.deck)
     (root / "slides").mkdir(parents=True, exist_ok=True)
     (root / "assets").mkdir(exist_ok=True)
-    for f in ("deck.css", "regions.css", "regions.js", "worldmap.css"):
+    for f in ("deck.css", "regions.css", "regions.js", "worldmap.css", "icons.css"):
         shutil.copy2(ASSETS / f, root / "assets" / f)
     theme = root / "assets" / "theme.css"
     if not theme.exists():
@@ -514,7 +514,7 @@ def sections_of(root: Path):
 
 
 def deck_css(root: Path, clean=False):
-    sheets = ["deck.css", "theme.css", "worldmap.css"]
+    sheets = ["deck.css", "theme.css", "worldmap.css", "icons.css"]
     if not clean:
         sheets.append("regions.css")
     return "\n".join((root / "assets" / n).read_text()
@@ -681,6 +681,12 @@ def cmd_worldmap(a):
     hi = ", ".join(meta["highlight_cc"] + meta["highlight_cont"]) or "없음"
     print(f"  경로 {sum(meta['counts'].values())}개 · {meta['bytes'] / 1024:.0f}KB"
           f" · 초점 {meta['focus']} · 호버 {meta['hover']} · 하이라이트 {hi}")
+
+
+def cmd_icons(a):
+    """아이콘은 덱과 무관하므로 별도 스크립트에 그대로 넘긴다."""
+    r = subprocess.run([sys.executable, str(SKILL_DIR / "scripts" / "icons.py")] + a.rest)
+    sys.exit(r.returncode)
 
 
 def cmd_decks(a):
@@ -1101,6 +1107,10 @@ def main():
 
     p = sub.add_parser("qa"); p.add_argument("target"); p.add_argument("--json", action="store_true")
     p.set_defaults(fn=cmd_qa)
+
+    p = sub.add_parser("icons", help="아이콘 찾기/조각 만들기 (icons.py 로 넘긴다)",
+                       add_help=False)
+    p.add_argument("rest", nargs=argparse.REMAINDER); p.set_defaults(fn=cmd_icons)
 
     p = sub.add_parser("decks", help="만들어 둔 덱 목록 (저장하지 않고 훑는다)")
     p.add_argument("--json", action="store_true"); p.set_defaults(fn=cmd_decks)
