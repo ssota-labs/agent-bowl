@@ -46,6 +46,12 @@ def ab(args, retry=True):
 def open_slide(path: Path, query="", size=(1280, 720)):
     ab(["set", "viewport", str(size[0]), str(size[1])])
     ab(["open", path.resolve().as_uri() + query])
+    # 브라우저 세션은 호출 사이에 유지된다. 앞서 지도 위에 머문 커서가 그대로
+    # 남으면 엉뚱한 대륙이 호버색으로 찍히고, PDF 에 구워지면 되돌릴 수 없다.
+    # CSS 로 pointer-events 를 꺼도 이미 걸린 :hover 는 안 풀린다 —
+    # 브라우저는 마우스가 움직여야 호버를 다시 계산한다. 그래서 실제로 치운다.
+    ab(["mouse", "move", "2", "2"])
+    ab(["eval", "document.documentElement.classList.add('rg-capture')"])
 
 
 def evaluate(expr):
