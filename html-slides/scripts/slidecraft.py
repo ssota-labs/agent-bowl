@@ -379,6 +379,40 @@ def cmd_shot(a):
 
 # ---------------------------------------------------------------------- QA
 
+ICON_TAG = re.compile(r'data-ic-set="([^"]+)"\s+data-ic="([^"]+)"')
+
+
+def icon_consistency(files):
+    """아이콘이 섞였는지 본다. 브라우저 QA 로는 못 잡는 종류의 문제다 —
+    렌더는 멀쩡한데 세트가 섞이면 선 두께가 어긋나 조잡해 보인다."""
+    use = {}
+    for f in files:
+        for st, name in ICON_TAG.findall(f.read_text()):
+            use.setdefault(st, {}).setdefault(name, []).append(f.name)
+    if not use:
+        return []
+
+    msgs = []
+    if len(use) > 1:
+        detail = " · ".join(f"{k}({sum(len(v) for v in n.values())}개)" for k, n in sorted(use.items()))
+        msgs.append(("✗", f"아이콘 세트가 섞였다 — {detail}. 한 덱에는 한 세트만 쓴다"))
+
+    # 같은 세트 안에서도 -line/-fill 처럼 결이 갈리는 접미사를 섞으면 티가 난다
+    for st, names in sorted(use.items()):
+        kinds = {}
+        for n in names:
+            for suf in ("-line", "-fill", "-bold", "-duotone"):
+                if n.endswith(suf):
+                    kinds.setdefault(suf, []).append(n)
+                    break
+            else:
+                kinds.setdefault("(기본)", []).append(n)
+        if len(kinds) > 1:
+            detail = " · ".join(f"{k} {len(v)}개" for k, v in sorted(kinds.items()))
+            msgs.append(("!", f"{st}: 아이콘 결이 섞였다 — {detail}. 접미사까지 통일한다"))
+    return msgs
+
+
 def cmd_qa(a):
     target = resolve_target(a.target)
     root = deck_root(target)
@@ -403,6 +437,11 @@ def cmd_qa(a):
             print(f'  {mark} [{i["region"]}] {i["kind"]} — {i["detail"]}')
         if not issues:
             print("  ✓ 이상 없음")
+    for sev, msg in icon_consistency(slides_of(target)):
+        print(f"  {sev} [아이콘] {msg}")
+        if sev == "✗":
+            bad += 1
+
     print(f"\n오류 {bad}건")
     if bad:
         sys.exit(1)
@@ -502,7 +541,8 @@ body{{background:#1a1c1f;height:auto;justify-content:flex-start;padding:20px 0 6
 
 # 작성용 속성 — 공유본에서는 털어낸다
 AUTHORING_ATTRS = re.compile(
-    r'\s+data-(?:region|label|part|role|region-color)="[^"]*"|\s+data-overlap-ok(?=[\s/>])')
+    r'\s+data-(?:region|label|part|role|region-color|ic-set|ic)="[^"]*"'
+    r'|\s+data-overlap-ok(?=[\s/>])')
 
 
 def sections_of(root: Path):

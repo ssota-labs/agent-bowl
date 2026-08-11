@@ -113,9 +113,13 @@ def snippet(set_name: str, icon: str, cls="ic", size=None, label=None) -> str:
     # 루트 속성(fill/stroke 등)은 원본 <svg> 에 있던 것이다. 개별 path 가 이걸
     # 물려받으므로 빠지면 선형 아이콘이 검은 덩어리로 칠해진다.
     root = " ".join(f'{k}="{v}"' for k, v in d.get("root", {}).items())
+    # 어느 세트에서 왔는지 남긴다. qa 가 이걸로 "세트 섞임" 을 잡는다.
+    # (공유본 빌드에서는 작성용 속성과 함께 털어낸다)
     return (f'<svg class="{escape(cls, quote=True)}" viewBox="{d["viewBox"]}"'
-            f'{" " + root if root else ""}{style}{a11y} '
-            f'xmlns="http://www.w3.org/2000/svg">{d["icons"][icon]}</svg>')
+            f'{" " + root if root else ""}{style}{a11y}'
+            f' data-ic-set="{escape(set_name, quote=True)}"'
+            f' data-ic="{escape(icon, quote=True)}"'
+            f' xmlns="http://www.w3.org/2000/svg">{d["icons"][icon]}</svg>')
 
 
 def cmd_get(a):

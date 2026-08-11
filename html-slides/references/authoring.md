@@ -63,6 +63,9 @@
 `.s-head`(슬라이드 헤더) `.s-num`(쪽번호) `.s-foot`(푸터, `margin-top:auto`)
 `.card` (`.outline` `.brand` `.edge`) `.chip`(`.accent`) `.steps`>`.step`>`.n`
 `.list`>`li` `.tbl` `.bars`>`.b`>`i`+`span` `.bleed` `.bleed-l` `.bleed-r`
+`.ic`(`.ic-inline` `.ic-lg` `.ic-xl` `.ic-accent`) — 아이콘. 2만여 개가 스킬에 구워져 있다:
+`python3 $S icons find 상승` → `icons get lucide:trending-up` ([icons.md](icons.md))
+**한 덱에 한 세트만.** 섞으면 `qa` 가 오류로 잡는다.
 `.slide.dark` — 어두운 슬라이드(표지/결론). 안쪽 색 변수가 자동 반전된다.
 
 ## 레시피
