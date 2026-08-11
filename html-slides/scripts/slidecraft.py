@@ -253,7 +253,7 @@ def cmd_new(a):
     root = new_deck_path(a.deck)
     (root / "slides").mkdir(parents=True, exist_ok=True)
     (root / "assets").mkdir(exist_ok=True)
-    for f in ("deck.css", "regions.css", "regions.js", "worldmap.css"):
+    for f in ("deck.css", "regions.css", "regions.js", "worldmap.css", "icons.css"):
         shutil.copy2(ASSETS / f, root / "assets" / f)
     theme = root / "assets" / "theme.css"
     if not theme.exists():
@@ -273,7 +273,10 @@ def cmd_add(a):
     c = cfg(root)
     existing = slides_of(root)
     no = f"{len(existing) + 1:02d}"
-    f = root / "slides" / f"{no}-{a.slug}.html"
+    # 번호는 여기서 붙인다. 예시 파일명(02-kpi)을 그대로 슬러그로 넘기는 일이 잦아서,
+    # 앞에 이미 번호가 있으면 떼어낸다 (안 그러면 02-02-kpi.html 이 된다).
+    slug = re.sub(r'^\d{1,3}[-_]', "", a.slug)
+    f = root / "slides" / f"{no}-{slug}.html"
     f.write_text(TEMPLATE.format(no=no, title=a.title or a.slug, deck=c.get("title", root.name)))
     print(f"[slidecraft] 슬라이드 추가: {f}")
 
@@ -376,6 +379,40 @@ def cmd_shot(a):
 
 # ---------------------------------------------------------------------- QA
 
+ICON_TAG = re.compile(r'data-ic-set="([^"]+)"\s+data-ic="([^"]+)"')
+
+
+def icon_consistency(files):
+    """아이콘이 섞였는지 본다. 브라우저 QA 로는 못 잡는 종류의 문제다 —
+    렌더는 멀쩡한데 세트가 섞이면 선 두께가 어긋나 조잡해 보인다."""
+    use = {}
+    for f in files:
+        for st, name in ICON_TAG.findall(f.read_text()):
+            use.setdefault(st, {}).setdefault(name, []).append(f.name)
+    if not use:
+        return []
+
+    msgs = []
+    if len(use) > 1:
+        detail = " · ".join(f"{k}({sum(len(v) for v in n.values())}개)" for k, n in sorted(use.items()))
+        msgs.append(("✗", f"아이콘 세트가 섞였다 — {detail}. 한 덱에는 한 세트만 쓴다"))
+
+    # 같은 세트 안에서도 -line/-fill 처럼 결이 갈리는 접미사를 섞으면 티가 난다
+    for st, names in sorted(use.items()):
+        kinds = {}
+        for n in names:
+            for suf in ("-line", "-fill", "-bold", "-duotone"):
+                if n.endswith(suf):
+                    kinds.setdefault(suf, []).append(n)
+                    break
+            else:
+                kinds.setdefault("(기본)", []).append(n)
+        if len(kinds) > 1:
+            detail = " · ".join(f"{k} {len(v)}개" for k, v in sorted(kinds.items()))
+            msgs.append(("!", f"{st}: 아이콘 결이 섞였다 — {detail}. 접미사까지 통일한다"))
+    return msgs
+
+
 def cmd_qa(a):
     target = resolve_target(a.target)
     root = deck_root(target)
@@ -400,6 +437,11 @@ def cmd_qa(a):
             print(f'  {mark} [{i["region"]}] {i["kind"]} — {i["detail"]}')
         if not issues:
             print("  ✓ 이상 없음")
+    for sev, msg in icon_consistency(slides_of(target)):
+        print(f"  {sev} [아이콘] {msg}")
+        if sev == "✗":
+            bad += 1
+
     print(f"\n오류 {bad}건")
     if bad:
         sys.exit(1)
@@ -499,7 +541,8 @@ body{{background:#1a1c1f;height:auto;justify-content:flex-start;padding:20px 0 6
 
 # 작성용 속성 — 공유본에서는 털어낸다
 AUTHORING_ATTRS = re.compile(
-    r'\s+data-(?:region|label|part|role|region-color)="[^"]*"|\s+data-overlap-ok(?=[\s/>])')
+    r'\s+data-(?:region|label|part|role|region-color|ic-set|ic)="[^"]*"'
+    r'|\s+data-overlap-ok(?=[\s/>])')
 
 
 def sections_of(root: Path):
@@ -514,7 +557,7 @@ def sections_of(root: Path):
 
 
 def deck_css(root: Path, clean=False):
-    sheets = ["deck.css", "theme.css", "worldmap.css"]
+    sheets = ["deck.css", "theme.css", "worldmap.css", "icons.css"]
     if not clean:
         sheets.append("regions.css")
     return "\n".join((root / "assets" / n).read_text()
@@ -681,6 +724,12 @@ def cmd_worldmap(a):
     hi = ", ".join(meta["highlight_cc"] + meta["highlight_cont"]) or "없음"
     print(f"  경로 {sum(meta['counts'].values())}개 · {meta['bytes'] / 1024:.0f}KB"
           f" · 초점 {meta['focus']} · 호버 {meta['hover']} · 하이라이트 {hi}")
+
+
+def cmd_icons(a):
+    """아이콘은 덱과 무관하므로 별도 스크립트에 그대로 넘긴다."""
+    r = subprocess.run([sys.executable, str(SKILL_DIR / "scripts" / "icons.py")] + a.rest)
+    sys.exit(r.returncode)
 
 
 def cmd_decks(a):
@@ -1101,6 +1150,10 @@ def main():
 
     p = sub.add_parser("qa"); p.add_argument("target"); p.add_argument("--json", action="store_true")
     p.set_defaults(fn=cmd_qa)
+
+    p = sub.add_parser("icons", help="아이콘 찾기/조각 만들기 (icons.py 로 넘긴다)",
+                       add_help=False)
+    p.add_argument("rest", nargs=argparse.REMAINDER); p.set_defaults(fn=cmd_icons)
 
     p = sub.add_parser("decks", help="만들어 둔 덱 목록 (저장하지 않고 훑는다)")
     p.add_argument("--json", action="store_true"); p.set_defaults(fn=cmd_decks)

@@ -1,0 +1,38 @@
+/* icons.css — 아이콘(.ic) 스타일.
+
+   deck.css 와 달리 **이 파일은 덱마다 고쳐도 된다.** 덱 전체의 아이콘 크기를
+   한 번에 바꾸려면 아래 --ic-size 값을 손보는 게 맞다 (references/icons.md).
+
+   단 fill 과 stroke 만은 건드리지 말 것 — 아래 .ic 주석 참고. */
+
+/* 아이콘은 "글자"처럼 다룬다 — 색은 color 를 따라가고(currentColor) 크기는 --ic-size.
+   여기서 fill/stroke 를 건드리면 안 된다. 세트마다 선형(fill:none + stroke)과
+   채움형(fill:currentColor)이 갈리는데 그 값은 <svg> 태그에 직접 박혀 나온다.
+   CSS 는 표현 속성을 이기므로, 여기서 fill 을 주면 선형 아이콘이 검게 칠해진다. */
+.ic {
+  width: var(--ic-size, 1em);
+  height: var(--ic-size, 1em);
+  flex: none;
+  vertical-align: -0.125em;
+}
+
+/* 글자 옆에 놓을 때 — 줄 높이에 맞춰 붙는다 */
+.ic-inline {
+  display: inline-block;
+  margin-right: .35em;
+}
+
+/* 칩(.chip) 안에 숫자 대신 아이콘을 넣을 때 */
+.chip > .ic {
+  --ic-size: 20px;
+  display: block;
+}
+
+/* 큰 장식용 — 카드 좌상단 같은 데 */
+.ic-lg { --ic-size: 28px; }
+.ic-xl { --ic-size: 40px; }
+
+/* 강조색으로 한 번만 */
+.ic-accent { color: var(--accent); }
+.ic-brand { color: var(--brand); }
+.ic-muted { color: var(--ink-3); }
