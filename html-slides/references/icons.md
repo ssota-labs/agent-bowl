@@ -21,12 +21,19 @@ python3 $S icons find 상승                  # 한글 키워드도 통한다
 python3 $S icons find chart --set lucide   # 세트를 정해서
 ~~~
 
-한글은 자주 쓰는 것만 매핑돼 있다 (`상승` `고객` `매출` `경고` `목표` …).
-안 걸리면 영어로 찾으면 된다 — `arrow`, `chart`, `user`, `check`, `building`.
+한글은 자주 쓰는 것만 매핑돼 있다 (`상승` `고객` `매출` `경고` `목표` `성장` `전략`
+`위험` `예산` `출시` …). 안 걸리면 영어로 찾으면 된다 — `arrow`, `chart`, `user`,
+`check`, `building`. 세트마다 없는 개념도 있다 (예: hugeicons 에는 `trophy` 가 없어
+`award`/`medal` 로 대신한다).
 
 **이름은 세트마다 다르다.** 같은 개념도 Lucide 는 `trending-up`, Phosphor 는
 `trend-up`, Remix 는 `line-chart-line` 이다. 통일 어휘를 만들지 않았다 —
 매핑표를 관리하느니 그때그때 찾는 편이 정확하다.
+
+그래서 **"아이콘 스타일 바꿔줘" 는 자동으로 갈아끼울 수 없다.** 세트를 바꾸려면
+쓰던 아이콘을 개념별로 새 세트에서 **다시 찾아** 하나씩 교체해야 한다.
+바꿀 일이 있을 것 같으면 처음에 세트를 신중히 고르는 편이 낫고, 바꿀 때는
+빠뜨린 아이콘이 없는지 `grep -c '<svg class="ic' <덱>/slides/*.html` 로 세어 본다.
 
 ## 넣기
 
@@ -69,7 +76,16 @@ python3 $S icons get lucide:trending-up
 
 준비된 클래스: `.ic-lg` `.ic-xl` `.ic-inline` `.ic-accent` `.ic-brand` `.ic-muted`
 
-**`icons.css` 에서 `fill` 이나 `stroke` 를 건드리지 말 것.** 세트마다 선형
+**덱 전체의 아이콘 크기를 한 번에 바꾸려면 그 덱의 `assets/icons.css` 를 고친다.**
+슬라이드마다 `--ic-size` 를 손보지 말 것 — 한 곳만 고치면 된다.
+
+~~~css
+/* <덱>/assets/icons.css */
+.ic-inline { --ic-size: 1.4em; }   /* 글자 옆 아이콘을 키운다 */
+.chip > .ic { --ic-size: 26px; }   /* 칩 안 아이콘 */
+~~~
+
+**단 `fill` 과 `stroke` 만은 건드리지 말 것.** 세트마다 선형
 (`fill="none"` + `stroke`)과 채움형(`fill="currentColor"`)이 갈리는데, 그 값은
 `<svg>` 태그에 직접 박혀 나온다. CSS 는 표현 속성을 이기므로 여기서 `fill` 을 주면
 **선형 아이콘이 통째로 검게 칠해진다.**

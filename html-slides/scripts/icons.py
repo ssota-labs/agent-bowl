@@ -40,6 +40,14 @@ ALIASES = {
     "목표": "target", "과녁": "target", "깃발": "flag", "트로피": "trophy",
     "톱니바퀴": "settings", "새로고침": "refresh", "다운로드": "download", "업로드": "upload",
     "장바구니": "shopping-cart", "상자": "package", "배송": "truck", "비행기": "plane",
+    # 실사용에서 안 걸렸던 것들 (테스트로 찾음)
+    "성장": "trending-up", "실적": "chart", "성과": "award", "수상": "award",
+    "전략": "target", "계획": "calendar", "일정표": "calendar", "분석": "chart",
+    "협업": "users", "회의": "presentation", "발표": "presentation",
+    "위험": "alert-triangle", "리스크": "alert-triangle", "품질": "badge-check",
+    "속도": "gauge", "예산": "wallet", "계약": "file-signature", "서명": "signature",
+    "출시": "rocket", "런칭": "rocket", "단계": "list-ordered", "순서": "list-ordered",
+    "비교": "scale", "균형": "scale", "연결": "link", "공유": "share",
 }
 
 

@@ -273,7 +273,10 @@ def cmd_add(a):
     c = cfg(root)
     existing = slides_of(root)
     no = f"{len(existing) + 1:02d}"
-    f = root / "slides" / f"{no}-{a.slug}.html"
+    # 번호는 여기서 붙인다. 예시 파일명(02-kpi)을 그대로 슬러그로 넘기는 일이 잦아서,
+    # 앞에 이미 번호가 있으면 떼어낸다 (안 그러면 02-02-kpi.html 이 된다).
+    slug = re.sub(r'^\d{1,3}[-_]', "", a.slug)
+    f = root / "slides" / f"{no}-{slug}.html"
     f.write_text(TEMPLATE.format(no=no, title=a.title or a.slug, deck=c.get("title", root.name)))
     print(f"[slidecraft] 슬라이드 추가: {f}")
 
