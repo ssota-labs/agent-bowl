@@ -1,6 +1,9 @@
 /* icons.css — 아이콘(.ic) 스타일.
-   (이 파일 자체는 고치지 않는다 — deck.css 와 같은 취급.
-    색·크기는 쓰는 자리에서 --ic-size / color 로 준다) */
+
+   deck.css 와 달리 **이 파일은 덱마다 고쳐도 된다.** 덱 전체의 아이콘 크기를
+   한 번에 바꾸려면 아래 --ic-size 값을 손보는 게 맞다 (references/icons.md).
+
+   단 fill 과 stroke 만은 건드리지 말 것 — 아래 .ic 주석 참고. */
 
 /* 아이콘은 "글자"처럼 다룬다 — 색은 color 를 따라가고(currentColor) 크기는 --ic-size.
    여기서 fill/stroke 를 건드리면 안 된다. 세트마다 선형(fill:none + stroke)과
