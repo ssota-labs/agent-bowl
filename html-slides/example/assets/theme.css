@@ -1,5 +1,6 @@
 /* 2026 성장 전략 — 덱 전용 테마. deck.css 대신 이 파일만 고친다.
    색은 주제에 맞게 반드시 새로 고를 것 (references/design.md). */
+/* slidecraft:tokens:start */
 :root {
   --bg: #ffffff;
   --bg-alt: #f3f5f8;
@@ -13,3 +14,4 @@
   --accent: #f96167;
   --on-brand: #ffffff;
 }
+/* slidecraft:tokens:end */

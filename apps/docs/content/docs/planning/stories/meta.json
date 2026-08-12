@@ -1,6 +1,11 @@
 {
   "title": "유저 스토리",
-  "pages": ["index"],
+  "pages": [
+    "index",
+    "us-click-element-and-edit-properties",
+    "us-manage-deck-color-palette",
+    "us-browse-edit-and-create-from-templates"
+  ],
   "pagesIndex": "index",
   "collapsible": true,
   "defaultOpen": false

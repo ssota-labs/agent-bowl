@@ -26,6 +26,9 @@
 `.slide` 는 1280×720 고정, `padding: 64px`, `display:flex; flex-direction:column; gap:28px`, `overflow:hidden`.
 즉 최상위 자식들은 세로로 쌓이고, 남는 높이는 `.fill` 을 붙인 자식이 먹는다.
 
+시각 편집기는 `data-region` / `data-part` 만 클릭·패치한다. 임의 DOM 전체 IDE는 아니다.
+`theme.css` 의 관리 토큰은 `/* slidecraft:tokens:start */` … `end` 블록이다.
+
 ## data-* 계약
 
 | 속성 | 어디에 | 왜 |

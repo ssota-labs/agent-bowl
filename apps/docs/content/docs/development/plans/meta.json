@@ -1,6 +1,9 @@
 {
   "title": "구현계획",
-  "pages": ["index"],
+  "pages": [
+    "index",
+    "plan-html-slide-visual-editor-implementation"
+  ],
   "pagesIndex": "index",
   "collapsible": true,
   "defaultOpen": false

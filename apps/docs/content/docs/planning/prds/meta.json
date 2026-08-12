@@ -1,6 +1,9 @@
 {
   "title": "PRD",
-  "pages": ["index"],
+  "pages": [
+    "index",
+    "prd-html-slide-visual-editor"
+  ],
   "pagesIndex": "index",
   "collapsible": true,
   "defaultOpen": false

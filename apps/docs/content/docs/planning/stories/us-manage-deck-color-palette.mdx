@@ -1,0 +1,28 @@
+---
+title: Manage deck color palette
+description: 덱 테마 색을 UI에서 고치면 theme.css 토큰이 갱신된다
+type: conceptual
+summary: 사용자는 팔레트 화면에서 브랜드·액센트 등 덱 색을 바꾸고 모든 슬라이드에 즉시 반영한다.
+id: US-manage-deck-color-palette
+ticker: US-002
+related:
+  - /docs/planning/prds/prd-html-slide-visual-editor
+---
+
+As a 발표 자료 작성자, I want 덱의 색 팔레트를 화면에서 고치고 so that 장표마다 색을 찾아 고치지 않아도 톤이 통일된다.
+
+## Context
+
+원본은 `assets/theme.css`의 관리되는 `:root` 토큰이다. JSON에 색을 중복 저장하지 않는다.
+
+## Acceptance criteria
+
+- 편집기에 팔레트 화면이 있고 현재 `--brand`, `--accent` 등 토큰 값이 보인다.
+- 색을 바꾸면 `theme.css`의 해당 토큰만 바뀌고 미리보기가 갱신된다.
+- 에이전트가 `theme.css`를 직접 고쳐도 UI가 따라온다.
+- 기존 덱은 최초 UI 저장 시 관리 marker block을 비파괴적으로 정규화할 수 있다.
+
+## Out of scope
+
+- 선택 모드용 12색 region 팔레트와 브랜드 팔레트의 통합
+- 임의의 CSS 규칙 전체 편집기

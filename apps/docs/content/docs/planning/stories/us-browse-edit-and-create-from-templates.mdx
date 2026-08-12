@@ -1,0 +1,28 @@
+---
+title: Browse edit and create from templates
+description: 템플릿을 미리보고 고친 뒤 새 슬라이드로 복제한다
+type: conceptual
+summary: 사용자는 프로젝트 templates HTML을 목록·미리보기·편집하고 새 슬라이드로 추가한다.
+id: US-browse-edit-and-create-from-templates
+ticker: US-003
+related:
+  - /docs/planning/prds/prd-html-slide-visual-editor
+---
+
+As a 발표 자료 작성자, I want 템플릿을 고르고 미리본 뒤 필요하면 고쳐서 새 장표를 만들고 so that 매번 빈 슬라이드부터 시작하지 않는다.
+
+## Context
+
+템플릿은 덱의 `templates/*.html`이다. 새 덱 생성 시 스킬 기본 템플릿이 복사된다. 템플릿 편집과 슬라이드 편집은 같은 inspector를 쓴다.
+
+## Acceptance criteria
+
+- 템플릿 탭에서 목록과 iframe 미리보기를 본다.
+- 템플릿의 region/part를 고치면 `templates/*.html`이 갱신된다.
+- “새 슬라이드로 추가” 시 템플릿을 `slides/`로 복제하고 번호·제목을 정규화한다.
+- 복제된 슬라이드를 고쳐도 템플릿 원본은 그대로다.
+
+## Out of scope
+
+- 템플릿 삭제·이름 변경·분류 체계
+- 클라우드 템플릿 마켓

@@ -1,0 +1,36 @@
+---
+title: Same-origin iframe canvas with file patch API
+description: 캔버스는 동일 출처 iframe으로 격리하고, 저장은 source-preserving patch API로 한다
+type: decision
+summary: 편집기 Shell과 슬라이드 DOM을 iframe으로 분리하고, HTML 전체 round-trip 대신 typed patch로 원본 파일을 갱신한다.
+id: ADR-same-origin-iframe-canvas-with-file-patch-api
+ticker: ADR-001
+stage: accepted
+related:
+  - /docs/spec/spec-html-slide-visual-editor-contract
+  - /docs/planning/prds/prd-html-slide-visual-editor
+---
+
+## Context
+
+현재 preview는 슬라이드 section을 편집기 DOM에 직접 주입한다. 속성 패널·팔레트·템플릿 UI가 커지면 덱 CSS/키보드와 충돌한다. 한편 iframe DOM의 `innerHTML`을 파일로 저장하면 주석·들여쓰기·에이전트 구조가 깨진다.
+
+## Decision
+
+1. 캔버스는 **동일 출처 iframe**으로 분리한다. 통신은 `postMessage`다.
+2. 원본은 디스크 파일이다. 서버가 `region`/`part` 대상의 **최소 범위 patch**만 적용한다.
+3. revision(hash)으로 에이전트·UI 동시 수정을 감지하고 silent overwrite를 금지한다.
+4. `/__canvas`는 응답에만 bridge를 주입하고 원본 HTML에는 편집기 스크립트를 쓰지 않는다.
+
+## Consequences
+
+- 좌표·선택 로직은 iframe 안에서, 패널·히스토리는 parent에서 관리한다.
+- HTML 파서가 전체 문서를 다시 쓰지 않도록 source-preserving 구현이 필요하다.
+- 기존 inline `PREVIEW_SHELL`을 정적 자산으로 분리하는 리팩터가 선행된다.
+
+## Rejected alternatives
+
+- **직접 DOM 렌더 유지**: 단기 단순하나 Shell/덱 CSS 충돌과 선택 오버레이 확장이 어렵다.
+- **iframe DOM 전체를 파일로 저장**: 형식 파괴·스크립트 오염·clean export 위험이 크다.
+- **JSON sidecar를 SSOT로**: 에이전트 워크플로(HTML 직접 편집)와 어긋난다.
+- **CDN/React 편집기**: 인트라넷·오프라인 clean HTML 제약과 충돌한다.

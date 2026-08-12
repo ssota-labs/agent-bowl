@@ -1,0 +1,30 @@
+---
+title: Click element and edit properties
+description: 슬라이드 영역을 클릭해 글과 공통 시각 속성을 고치면 원본 HTML에 저장된다
+type: conceptual
+summary: 사용자는 미리보기에서 region/part를 눌러 텍스트·색·타이포·간격 등을 고치고 파일이 갱신된다.
+id: US-click-element-and-edit-properties
+ticker: US-001
+related:
+  - /docs/planning/prds/prd-html-slide-visual-editor
+---
+
+As a 비개발자 발표 자료 작성자, I want 미리보기에서 영역을 클릭해 글과 흔한 스타일을 고치고 so that 에이전트에게 매번 말로 재지시하지 않아도 원본 파일이 맞춰진다.
+
+## Context
+
+선택 가능한 대상은 `data-region` / `data-part` 뿐이다. 캔버스는 동일 출처 iframe이다, 저장은 patch API로 한다.
+
+## Acceptance criteria
+
+- 클릭 시 가장 가까운 `data-part` 또는 `data-region`이 선택되고 우측 패널에 파일·주소·label이 보인다.
+- leaf `data-part` 텍스트를 고치면 해당 슬라이드/템플릿 HTML의 그 텍스트만 바뀐다.
+- color, background-color, font-size, font-weight, text-align, width, height, padding, gap, border-radius를 고치면 해당 요소의 style 선언만 추가·교체·삭제된다.
+- nested markup 텍스트는 읽기 전용이며 이유를 보여 준다.
+- 저장 후 새로고침해도 선택과 값이 유지되고, revision 충돌 시 silent overwrite 하지 않는다.
+- Undo/Redo가 세션 단위로 동작한다.
+
+## Out of scope
+
+- 미등록 임의 DOM 요소 편집
+- 대부분의 CSS 속성을 다루는 고급 IDE

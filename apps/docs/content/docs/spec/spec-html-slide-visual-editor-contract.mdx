@@ -1,0 +1,107 @@
+---
+title: HTML Slide Visual Editor Contract
+description: iframe 메시지, patch API, 파일 원본, revision 충돌, clean export 계약
+type: reference
+summary: 편집기는 동일 출처 iframe과 typed patch로 원본 HTML/CSS만 갱신하며 clean 공유본에 편집기 흔적을 남기지 않는다.
+id: SPEC-html-slide-visual-editor-contract
+stage: accepted
+related:
+  - /docs/planning/prds/prd-html-slide-visual-editor
+  - /docs/development/adr/adr-same-origin-iframe-canvas-with-file-patch-api
+---
+
+## 범위
+
+html-slides 미리보기를 시각 편집기로 확장한다. 편집 대상은 `data-region` / `data-part`와 `theme.css` 관리 토큰, `templates/*.html`이다.
+
+## 인터페이스
+
+### Parent ↔ iframe `postMessage`
+
+| type | 방향 | payload |
+|------|------|---------|
+| `select` | iframe → parent | `{ file, region, part?, label?, tag, computedStyle, text?, textEditable }` |
+| `deselect` | iframe → parent | `{}` |
+| `highlight` | parent → iframe | `{ region, part? }` |
+| `ready` | iframe → parent | `{ file }` |
+
+부모는 `event.origin === location.origin` 이고 `source === iframe.contentWindow` 인 메시지만 받는다.
+
+### HTTP
+
+| method path | 역할 |
+|-------------|------|
+| `GET /__project` | slides/templates/palette/revision manifest |
+| `GET /__canvas?file=` | 원본 HTML + 응답 시 bridge 주입 |
+| `PATCH /__edit` | HTML 텍스트/style patch |
+| `PATCH /__theme` | theme.css 토큰 patch |
+| `POST /__slides/from-template` | 템플릿 → 새 슬라이드 |
+| `GET /__token` | watch token (기존) |
+| `GET /__download` | clean 공유본 (기존) |
+
+`PATCH /__edit` body:
+
+```json
+{
+  "fileId": "slides/02-kpi.html",
+  "baseRevision": "sha1…",
+  "target": { "region": "kpi-revenue", "part": "value" },
+  "changes": {
+    "text": "156",
+    "style": { "color": "#f96167", "font-size": null }
+  }
+}
+```
+
+`style`에서 `null`은 해당 선언 제거(상속 복원)다. 지원 키: `color`, `background-color`, `font-size`, `font-weight`, `text-align`, `width`, `height`, `padding`, `gap`, `border-radius`.
+
+## 동작
+
+1. Shell이 `/__project`로 목록을 받고 iframe에 `/__canvas?file=`을 로드한다.
+2. 클릭 시 가장 가까운 `[data-part]` 없으면 `[data-region]`을 선택한다.
+3. 패널 입력을 debounce/blur로 `PATCH /__edit` 또는 `PATCH /__theme`에 보낸다.
+4. 서버는 `baseRevision`이 현재 파일 hash와 같아야 패치한다. 다르면 `409`와 최신 revision을 반환한다.
+5. 패치는 opening tag 또는 leaf text span의 최소 범위만 치환한다. 전체 serialize 금지.
+6. 성공 write는 temp + rename이며 watch token이 바뀌어 자동 갱신한다. 선택 상태는 유지한다.
+7. `build --clean` / `/__download`에는 Shell·bridge·작성용 메타가 포함되지 않는다.
+
+## 데이터와 불변식
+
+| 이름 | 키 | 예시 |
+|------|-----|------|
+| 원본 슬라이드 | `slides/*.html` | `02-kpi.html` |
+| 원본 템플릿 | `templates/*.html` | `kpi-grid.html` |
+| 팔레트 | `assets/theme.css` `:root` 관리 block | `--brand: #1e2761` |
+| revision | 파일 sha1 hex 16자 | `a1b2c3…` |
+| 영역 주소 | `data-region` + optional `data-part` | `kpi-revenue.value` |
+
+불변식:
+
+- iframe DOM / `dist/*`는 원본이 아니다.
+- path는 덱 root 내부 allowlist만 (`slides/`, `templates/`, `assets/theme.css`).
+- duplicate region+part, malformed HTML, non-leaf text 편집은 파일을 건드리지 않고 오류를 반환한다.
+- region 선택용 12색 팔레트와 deck brand 팔레트는 분리한다.
+
+## 오류
+
+| 상황 | 응답 |
+|------|------|
+| stale revision | `409` + `{ revision, reason }` |
+| missing target | `404` |
+| path escape | `403` |
+| non-leaf / duplicate | `400` + 이유 |
+| theme token 미존재(정규화 전) | 읽기는 허용, 최초 저장 시 marker block 정규화 |
+
+## 호환성
+
+- 기존 `preview`, `map`, `shot`, `qa`, `build`, `pdf`, 독립 slide `file://` 동작 유지.
+- Node/CDN 없는 clean HTML 유지.
+- 기존 덱은 템플릿 폴더가 없어도 슬라이드 편집이 가능하다. `new`부터 `templates/`를 복사한다.
+
+## 수락 기준
+
+- region/part 클릭 → 패널 → 파일 patch → reload 후 동일 값·선택 유지
+- 테마 토큰 변경이 모든 슬라이드에 반영
+- 템플릿 편집 및 from-template 슬라이드 생성
+- clean HTML에 editor 흔적 없음
+- agent 동시 수정 시 409 또는 안전 재적용만

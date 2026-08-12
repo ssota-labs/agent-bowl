@@ -1,0 +1,80 @@
+---
+title: HTML Slide Visual Editor Implementation
+description: iframe 편집기 Shell, patch API, 팔레트·템플릿을 html-slides에 구현한다
+type: guide
+summary: Python preview를 파일 원본 중심 시각 편집기로 확장한다. Shell/iframe 분리, source-preserving patch, theme·templates UI.
+id: PLAN-html-slide-visual-editor-implementation
+ticker: PLAN-001
+stage: done
+changeType: product
+prd: PRD-html-slide-visual-editor
+specs:
+  - SPEC-html-slide-visual-editor-contract
+stories:
+  - US-click-element-and-edit-properties
+  - US-manage-deck-color-palette
+  - US-browse-edit-and-create-from-templates
+codeAreas:
+  - html-slides/
+related:
+  - /docs/planning/prds/prd-html-slide-visual-editor
+  - /docs/spec/spec-html-slide-visual-editor-contract
+  - /docs/development/adr/adr-same-origin-iframe-canvas-with-file-patch-api
+---
+
+## 목표
+
+미리보기에서 region/part를 클릭해 고치면 `slides/*.html`·`templates/*.html`·`assets/theme.css`가 갱신되고, clean 공유본에는 편집기 흔적이 없다. 자세한 사용자 목표는 [PRD](/docs/planning/prds/prd-html-slide-visual-editor)를 따른다.
+
+## 영향 범위
+
+- `html-slides/scripts/slidecraft.py` — preview 서버·엔드포인트·new/add 템플릿 복사
+- `html-slides/scripts/` — patcher·테마 토큰 유틸·단위 테스트
+- `html-slides/assets/` 및 `html-slides/editor/` — Shell·bridge·inspector 클라이언트
+- `html-slides/templates/` — 스킬 기본 HTML 템플릿
+- example 덱 theme marker / templates 동기화
+- SKILL.md / authoring references 갱신
+
+## 구현 순서
+
+1. 편집기 Shell 정적 자산 분리 + 동일 출처 iframe + selection bridge
+2. `/__project`, `/__canvas`, `/__edit`, `/__theme`, `/__slides/from-template` + revision/atomic write
+3. source-preserving HTML/CSS patcher + 단위 테스트
+4. 우측 inspector (텍스트·공통 스타일) + undo/redo + 선택 유지 reload
+5. theme.css 관리 marker·팔레트 UI
+6. skill templates → 덱 `templates/` 복사, 갤러리·편집·from-template
+7. 호환성·clean export·브라우저 흐름 검증
+
+## 검증 계획
+
+### 자동 테스트
+
+- patcher: 텍스트/style, 형식 보존, duplicate/malformed, path traversal, stale revision
+- `python3 -m unittest` (또는 동등) under `html-slides/scripts/`
+
+### 수동 테스트 / 기획 체크
+
+1. example 덱 `preview` → KPI value 클릭 → 숫자·색 변경 → 파일·reload 확인
+2. 팔레트에서 `--accent` 변경 → 여러 슬라이드 반영
+3. 템플릿 편집 후 새 슬라이드 생성 → 템플릿 원본 불변
+4. 외부에서 같은 HTML을 고친 뒤 UI 저장 → 409 또는 안전 재적용
+5. `build --clean` / HTML 저장본에 bridge·Shell 없음
+6. `qa`, `map`, `shot` 회귀
+
+## 마이그레이션과 호환성
+
+- 기존 덱: 슬라이드 편집은 즉시 가능. `templates/` 없으면 템플릿 탭이 빈 상태 + 안내.
+- theme: 기존 `:root` 읽기 가능, 최초 UI 저장 시 marker 정규화.
+- `regions.js` 주소록/QA 역할 유지, 편집 선택과 분리.
+
+## 위험과 롤백
+
+- HTML patch 실패 시 파일 미변경 + 명시 오류.
+- Shell 분리 실패 시 기존 preview 경로를 임시 유지할 수 있으나, 최종은 iframe Shell로 통일.
+- 롤백: editor 자산과 write API를 끄고 이전 read-only preview로 되돌림.
+
+## 완료 조건
+
+- SPEC 수락 기준과 PRD 성공 지표를 만족
+- `pnpm check:planning` 통과
+- example 덱 clean build에 편집기 흔적 없음

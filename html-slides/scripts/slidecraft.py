@@ -25,8 +25,13 @@ from pathlib import Path
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
 ASSETS = SKILL_DIR / "assets"
+EDITOR = SKILL_DIR / "editor"
+TEMPLATES = SKILL_DIR / "templates"
 SESSION = os.environ.get("AGENT_BROWSER_SESSION", "slidecraft")
 ANSI = re.compile(r"\x1b\[[0-9;]*[a-zA-Z]")
+
+sys.path.insert(0, str(SKILL_DIR / "scripts"))
+import html_patch  # noqa: E402
 
 
 # ------------------------------------------------------------------ 브라우저
@@ -233,6 +238,7 @@ TEMPLATE = """<!doctype html>
 
 THEME = """/* {deck} — 덱 전용 테마. deck.css 대신 이 파일만 고친다.
    색은 주제에 맞게 반드시 새로 고를 것 (references/design.md). */
+/* slidecraft:tokens:start */
 :root {{
   --bg: #ffffff;
   --bg-alt: #f3f5f8;
@@ -246,7 +252,35 @@ THEME = """/* {deck} — 덱 전용 테마. deck.css 대신 이 파일만 고친
   --accent: #f96167;
   --on-brand: #ffffff;
 }}
+/* slidecraft:tokens:end */
 """
+
+
+def copy_skill_templates(root: Path):
+    dest = root / "templates"
+    dest.mkdir(parents=True, exist_ok=True)
+    if not TEMPLATES.is_dir():
+        return
+    for src in sorted(TEMPLATES.glob("*.html")):
+        target = dest / src.name
+        if not target.exists():
+            shutil.copy2(src, target)
+
+
+def templates_of(root: Path):
+    d = root / "templates"
+    if not d.is_dir():
+        return []
+    return sorted(p for p in d.glob("*.html") if not p.name.startswith("_"))
+
+
+def slide_title_of(path: Path) -> str:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    m = re.search(r'data-title="([^"]*)"', text)
+    if m:
+        return m.group(1)
+    m = re.search(r"<title>([^<]*)</title>", text, re.I)
+    return (m.group(1).strip() if m else path.stem)
 
 
 def cmd_new(a):
@@ -258,11 +292,20 @@ def cmd_new(a):
     theme = root / "assets" / "theme.css"
     if not theme.exists():
         theme.write_text(THEME.format(deck=a.title))
+    copy_skill_templates(root)
     w, h = (int(x) for x in a.size.lower().split("x"))
     (root / "deck.json").write_text(json.dumps({"title": a.title, "size": [w, h]}, ensure_ascii=False, indent=2))
     if not any((root / "slides").glob("*.html")):
-        (root / "slides" / "01-title.html").write_text(
-            TEMPLATE.format(no="01", title=a.title, deck=a.title))
+        title_tpl = root / "templates" / "title.html"
+        if title_tpl.exists():
+            html = title_tpl.read_text(encoding="utf-8")
+            html = re.sub(r'data-slide="[^"]*"', 'data-slide="01"', html, count=1)
+            html = re.sub(r'data-title="[^"]*"', f'data-title="{a.title}"', html, count=1)
+            html = re.sub(r"<title>[^<]*</title>", f"<title>{a.title}</title>", html, count=1, flags=re.I)
+            (root / "slides" / "01-title.html").write_text(html)
+        else:
+            (root / "slides" / "01-title.html").write_text(
+                TEMPLATE.format(no="01", title=a.title, deck=a.title))
     print(f"[slidecraft] 덱 생성: {root}")
     print(f"  덱 이름: {root.name}   ← 사용자에게 이 이름을 알려줄 것")
     print(f"  다음부터는 경로 대신 이름만 줘도 된다:  preview {root.name}")
@@ -761,9 +804,18 @@ def cmd_decks(a):
     print(f"\n{len(rows)}개. 고치려면: preview <이름>")
 
 
-# ------------------------------------------------------------------ 라이브 프리뷰
+# ------------------------------------------------------------------ 라이브 프리뷰 / 시각 편집기
 
-WATCH_GLOBS = ("slides/*.html", "assets/*.css", "assets/*.js", "deck.json")
+WATCH_GLOBS = (
+    "slides/*.html",
+    "templates/*.html",
+    "assets/*.css",
+    "assets/*.js",
+    "deck.json",
+)
+
+EDITOR_FILES = {"shell.html", "shell.css", "shell.js", "bridge.js"}
+MAX_BODY = 256_000
 
 
 def watch_token(root: Path) -> str:
@@ -779,213 +831,94 @@ def watch_token(root: Path) -> str:
     return hashlib.sha1("|".join(sig).encode()).hexdigest()[:16]
 
 
-PREVIEW_SHELL = """<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title} — 미리보기</title>
-<style id="deck-css"></style>
-<style>
-  /* 툴바·페이저는 작업본 deck.html 과 같은 모양을 쓴다 (떠 있는 작은 버튼들) */
-  html,body{{margin:0;height:100%;background:#1a1c1f;overflow:hidden}}
-  #wrap{{position:fixed;inset:0 0 52px 0;overflow:hidden;transition:right .18s ease}}
-  #scaler{{position:absolute;left:50%;top:50%;transform-origin:center center}}
+def resolve_deck_file(root: Path, file_id: str) -> Path:
+    """Allow only slides/*.html, templates/*.html under the deck root."""
+    if not file_id or "\\" in file_id or file_id.startswith("/") or ".." in file_id.split("/"):
+        raise PermissionError("path not allowed")
+    parts = file_id.split("/")
+    if len(parts) != 2 or parts[0] not in ("slides", "templates"):
+        raise PermissionError("path not allowed")
+    if not parts[1].endswith(".html") or parts[1].startswith(".") or "/" in parts[1]:
+        raise PermissionError("path not allowed")
+    path = (root / parts[0] / parts[1]).resolve()
+    root_r = root.resolve()
+    if path.parent != (root_r / parts[0]):
+        raise PermissionError("path escape")
+    return path
 
-  /* 선택 모드 주소록은 슬라이드 위에 겹치지 않게 오른쪽 패널로 뺀다 */
-  #panel{{position:fixed;right:0;top:0;bottom:52px;width:420px;overflow:auto;z-index:99998;
-    background:#202329;border-left:1px solid #2c3138;padding:14px;display:none}}
-  body.panel-on #panel{{display:block}}
-  body.panel-on #wrap{{right:420px}}
-  #panel #rg-legend{{width:auto!important;max-width:none!important;margin:0!important;
-    border:0!important;border-radius:0!important;background:transparent!important;
-    padding:0!important;color:#c7ccd3!important;overflow:visible!important}}
-  #panel #rg-legend h4{{color:#e8eaed!important}}
-  #panel #rg-legend table{{font-size:12px!important}}
-  #panel #rg-legend th{{color:#8b95a1!important;background:transparent!important;
-    border-color:#2c3138!important;position:sticky;top:-14px}}
-  #panel #rg-legend td{{color:#c7ccd3!important;border-color:#2c3138!important;
-    white-space:normal!important}}
-  #panel #rg-legend td.tx{{color:#9aa3ad!important}}
-  #panel #rg-legend code{{color:#e8eaed!important}}
-  #panel-empty{{color:#8b95a1;font:600 12px/1.6 -apple-system,"Apple SD Gothic Neo",system-ui,sans-serif}}
-  #stage .slide{{display:none;box-shadow:0 18px 60px rgba(0,0,0,.45)}}
-  #stage .slide.is-active{{display:flex}}
 
-  #bar{{position:fixed;left:14px;bottom:12px;z-index:99999;display:flex;gap:6px;align-items:center;
-    font:600 12px/1 -apple-system,"Apple SD Gothic Neo",system-ui,sans-serif}}
-  #bar button{{border:1px solid #3a3f47;background:#24272c;color:#c7ccd3;border-radius:7px;
-    padding:7px 11px;cursor:pointer;font:inherit}}
-  #bar button:hover{{background:#31353b;color:#fff}}
-  #bar button[aria-pressed="true"]{{background:#e8eaed;border-color:#e8eaed;color:#16181b}}
-  #bar button.primary{{background:#e8eaed;border-color:#e8eaed;color:#16181b}}
-  #bar button.primary:hover{{background:#fff;color:#16181b}}
-  #bar .sep{{width:1px;height:20px;background:#3a3f47;margin:0 4px}}
-  #pg{{color:#8b95a1;font-variant-numeric:tabular-nums;padding:0 2px}}
+def project_manifest(root: Path) -> dict:
+    c = cfg(root)
+    theme = root / "assets" / "theme.css"
+    theme_text = theme.read_text(encoding="utf-8") if theme.exists() else ""
+    slides = []
+    for p in slides_of(root):
+        slides.append({
+            "id": f"slides/{p.name}",
+            "title": slide_title_of(p),
+            "revision": html_patch.file_revision(p),
+        })
+    templates = []
+    for p in templates_of(root):
+        templates.append({
+            "id": f"templates/{p.name}",
+            "title": slide_title_of(p),
+            "revision": html_patch.file_revision(p),
+        })
+    return {
+        "title": c.get("title", root.name),
+        "size": c.get("size", [1280, 720]),
+        "token": watch_token(root),
+        "slides": slides,
+        "templates": templates,
+        "palette": html_patch.read_theme_tokens(theme_text) if theme_text else {},
+        "themeRevision": html_patch.file_revision(theme) if theme.exists() else "",
+    }
 
-  #pager{{position:fixed;right:18px;bottom:14px;z-index:99999;display:flex;align-items:center;gap:7px;
-    color:#8b95a1;font:600 12px/1 -apple-system,"Apple SD Gothic Neo",system-ui,sans-serif}}
-  #dot{{width:7px;height:7px;border-radius:50%;background:#4ade80}}
-  #dot.hit{{background:#fbbf24}}
-  #err{{position:fixed;left:14px;right:14px;bottom:52px;background:#3b1416;color:#fca5a5;
-    border:1px solid #7f1d1d;border-radius:7px;padding:9px 12px;display:none;z-index:99999;
-    white-space:pre-wrap;font:600 12px/1.5 -apple-system,"Apple SD Gothic Neo",system-ui,sans-serif}}
 
-  @media print{{
-    html,body{{background:#fff;overflow:visible;height:auto}}
-    #bar,#pager,#err{{display:none!important}}
-    #wrap{{position:static;inset:auto;display:block;overflow:visible}}
-    #scaler{{position:static;left:auto;top:auto;transform:none!important}}
-    #stage .slide{{display:flex!important;box-shadow:none;page-break-after:always;break-after:page}}
-    @page{{size:{w}px {h}px;margin:0}}
-  }}
-</style>
-</head>
-<body>
+def inject_canvas(html: str, file_id: str, bridge_js: str) -> str:
+    """Inject base href + bridge. Keep regions.js for select-mode overlays."""
+    base_dir = "/slides/" if file_id.startswith("slides/") else "/templates/"
+    if re.search(r"<base\b", html, re.I) is None:
+        if re.search(r"<head[^>]*>", html, re.I):
+            html = re.sub(
+                r"(<head[^>]*>)",
+                rf'\1\n<base href="{base_dir}">\n',
+                html, count=1, flags=re.I)
+        else:
+            html = f'<base href="{base_dir}">\n' + html
+    if re.search(r"<html\b", html, re.I):
+        if "data-editor-file=" in html:
+            html = re.sub(
+                r'data-editor-file="[^"]*"',
+                f'data-editor-file="{file_id}"',
+                html, count=1)
+        else:
+            html = re.sub(
+                r"<html\b",
+                f'<html data-editor-file="{file_id}"',
+                html, count=1, flags=re.I)
+    # Ensure regions.js is present for select/grid overlays (after other scripts).
+    if not re.search(r'regions\.js', html, re.I):
+        tag = '<script src="../assets/regions.js"></script>\n'
+        if re.search(r"</body\s*>", html, re.I):
+            html = re.sub(r"</body\s*>", tag + "</body>", html, count=1, flags=re.I)
+        else:
+            html += "\n" + tag
+    bridge_tag = f"<script>\n{bridge_js}\n</script>\n"
+    if re.search(r"</body\s*>", html, re.I):
+        html = re.sub(r"</body\s*>", bridge_tag + "</body>", html, count=1, flags=re.I)
+    else:
+        html = html + "\n" + bridge_tag
+    return html
 
-<div id="wrap"><div id="scaler"><div id="stage"></div></div></div>
-<div id="panel"><div id="panel-empty">선택 모드를 켜면 영역 주소록이 여기 나옵니다.</div></div>
-<div id="err"></div>
 
-<div id="bar">
-  <button id="b-prev" title="이전 (←)">‹</button>
-  <span id="pg">– / –</span>
-  <button id="b-next" title="다음 (→)">›</button>
-  <span class="sep"></span>
-  <button id="b-sel" aria-pressed="false" title="영역에 번호·색·이름 배지를 붙인다 (S)">선택 모드</button>
-  <button id="b-grid" aria-pressed="false" title="위치 격자 (G)">격자</button>
-  <span class="sep"></span>
-  <button id="b-save" class="primary" title="완성본 HTML 파일을 내려받는다">HTML 저장</button>
-  <button id="b-pdf" title="브라우저 인쇄창에서 'PDF로 저장'을 고른다">PDF 저장</button>
-</div>
-<div id="pager"><span id="dot"></span><span id="live-label">자동 새로고침 켜짐</span></div>
-
-<script>
-(function(){{
-  var W={w}, H={h};
-  var stage=document.getElementById('stage'), scaler=document.getElementById('scaler');
-  var st={{i:0, sel:false, grid:false, token:null, loaded:false, fails:0}};
-  var $=function(id){{return document.getElementById(id)}};
-
-  function fit(){{
-    var pw=document.body.classList.contains('panel-on')?420:0;
-    var vw=innerWidth-pw-96, vh=innerHeight-52-72;
-    var k=Math.min(vw/W, vh/H, 1);
-    scaler.style.transform='translate(-50%,-50%) scale('+k+')';
-    scaler.style.width=W+'px'; scaler.style.height=H+'px';
-  }}
-  addEventListener('resize', fit);
-
-  function err(msg){{
-    var e=$('err');
-    if(!msg){{ e.style.display='none'; return; }}
-    e.textContent=msg; e.style.display='block';
-  }}
-
-  function movePanel(){{
-    var lg=document.getElementById('rg-legend');
-    var panel=document.getElementById('panel');
-    if(st.sel){{
-      document.body.classList.add('panel-on');
-      if(lg && lg.parentNode!==panel){{ panel.innerHTML=''; panel.appendChild(lg); }}
-    }} else {{
-      document.body.classList.remove('panel-on');
-      if(lg) lg.remove();
-      panel.innerHTML='<div id="panel-empty">선택 모드를 켜면 영역 주소록이 여기 나옵니다.</div>';
-    }}
-    fit();
-  }}
-
-  function paint(){{
-    var s=stage.querySelectorAll('.slide');
-    if(!s.length) return;
-    st.i=Math.max(0, Math.min(s.length-1, st.i));
-    for(var k=0;k<s.length;k++) s[k].classList.toggle('is-active', k===st.i);
-    $('pg').textContent=(st.i+1)+' / '+s.length;
-    $('b-sel').setAttribute('aria-pressed', st.sel);
-    $('b-grid').setAttribute('aria-pressed', st.grid);
-    if(window.slideMode) window.slideMode(st.sel?'select':'preview', {{grid:st.grid, level:1}});
-    movePanel();
-  }}
-  function go(n){{ st.i=n; paint(); }}
-
-  function loadRegions(){{
-    if(window.slideMode) return Promise.resolve();
-    return new Promise(function(res){{
-      var sc=document.createElement('script');
-      sc.src='/__regions.js'; sc.onload=res; sc.onerror=res;
-      document.body.appendChild(sc);
-    }});
-  }}
-
-  function apply(d){{
-    document.getElementById('deck-css').textContent=d.css;
-    stage.innerHTML=d.slides;
-    document.title=d.title+' — 미리보기';
-    st.token=d.token;
-    st.loaded=true;
-    fit();
-    return loadRegions().then(paint);
-  }}
-
-  function pull(){{
-    return fetch('/__deck', {{cache:'no-store'}}).then(function(r){{return r.json()}})
-      .then(function(d){{
-        if(d.error){{ err(d.error); return; }}
-        err(''); return apply(d);
-      }})
-      .catch(function(e){{ err('미리보기 서버에 연결하지 못했습니다: '+e.message); }});
-  }}
-
-  function poll(){{
-    fetch('/__token', {{cache:'no-store'}}).then(function(r){{return r.text()}})
-      .then(function(t){{
-        t=t.trim();
-        live(true);
-        if(t && (!st.loaded || t!==st.token)){{
-          $('dot').classList.add('hit');
-          pull().then(function(){{ setTimeout(function(){{$('dot').classList.remove('hit')}}, 400); }});
-        }}
-      }}).catch(function(){{ live(false); }});
-  }}
-
-  function live(ok){{
-    st.fails = ok ? 0 : st.fails+1;
-    var dot=$('dot'), lab=$('live-label');
-    if(!ok && st.fails>=3){{
-      dot.style.background='#ef4444';
-      lab.textContent='연결 끊김 — 미리보기를 다시 켜 주세요';
-    }} else if(ok){{
-      dot.style.background='';
-      lab.textContent='자동 새로고침 켜짐';
-    }}
-  }}
-
-  $('b-prev').onclick=function(){{go(st.i-1)}};
-  $('b-next').onclick=function(){{go(st.i+1)}};
-  $('b-sel').onclick=function(){{st.sel=!st.sel;paint()}};
-  $('b-grid').onclick=function(){{st.grid=!st.grid; if(st.grid) st.sel=true; paint()}};
-  $('b-save').onclick=function(){{ location.href='/__download'; }};
-  $('b-pdf').onclick=function(){{ print(); }};
-
-  document.addEventListener('keydown', function(e){{
-    if(e.metaKey||e.ctrlKey) return;
-    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown') go(st.i+1);
-    else if(e.key==='ArrowLeft'||e.key==='PageUp') go(st.i-1);
-    else if(e.key==='Home') go(0);
-    else if(e.key==='End') go(stage.querySelectorAll('.slide').length-1);
-    else if(e.key==='s'||e.key==='S'){{st.sel=!st.sel;paint()}}
-    else if(e.key==='g'||e.key==='G'){{st.grid=!st.grid; if(st.grid) st.sel=true; paint()}}
-  }}, true);
-
-  fit();
-  pull();
-  setInterval(poll, 600);
-}})();
-</script>
-</body>
-</html>
-"""
+def read_json_body(handler, max_bytes=MAX_BODY) -> dict:
+    length = int(handler.headers.get("Content-Length") or "0")
+    if length <= 0 or length > max_bytes:
+        raise ValueError("invalid body size")
+    raw = handler.rfile.read(length)
+    return json.loads(raw.decode("utf-8"))
 
 
 def cmd_preview(a):
@@ -997,7 +930,10 @@ def cmd_preview(a):
 
     root = find_deck(a.deck)
     c = cfg(root)
-    w, h = c["size"]
+
+    def load_bridge():
+        f = EDITOR / "bridge.js"
+        return f.read_text(encoding="utf-8") if f.exists() else ""
 
     class Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *args, **kw):
@@ -1006,10 +942,17 @@ def cmd_preview(a):
         def log_message(self, *args):
             pass
 
-        def _send(self, body, ctype="text/html; charset=utf-8", extra=None):
+        def _check_local(self):
+            host = (self.headers.get("Host") or "").split(":")[0]
+            if host not in ("127.0.0.1", "localhost", ""):
+                self.send_error(403, "localhost only")
+                return False
+            return True
+
+        def _send(self, body, ctype="text/html; charset=utf-8", extra=None, status=200):
             if isinstance(body, str):
                 body = body.encode()
-            self.send_response(200)
+            self.send_response(status)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(body)))
             self.send_header("Cache-Control", "no-store")
@@ -1018,12 +961,37 @@ def cmd_preview(a):
             self.end_headers()
             self.wfile.write(body)
 
+        def _send_json(self, payload, status=200):
+            return self._send(
+                _json.dumps(payload, ensure_ascii=False),
+                "application/json; charset=utf-8",
+                status=status,
+            )
+
         def do_GET(self):
-            path = self.path.split("?")[0]
+            if not self._check_local():
+                return
+            parsed = urllib.parse.urlparse(self.path)
+            path = parsed.path
+            qs = urllib.parse.parse_qs(parsed.query)
             try:
                 if path == "/":
-                    return self._send(PREVIEW_SHELL.format(
-                        title=c.get("title", root.name), w=w, h=h))
+                    shell = (EDITOR / "shell.html").read_text(encoding="utf-8")
+                    return self._send(shell)
+
+                if path.startswith("/__editor/"):
+                    name = path[len("/__editor/"):]
+                    if name not in EDITOR_FILES:
+                        return self.send_error(404)
+                    f = EDITOR / name
+                    if not f.exists():
+                        return self.send_error(404)
+                    ctype = {
+                        ".css": "text/css; charset=utf-8",
+                        ".js": "application/javascript; charset=utf-8",
+                        ".html": "text/html; charset=utf-8",
+                    }.get(f.suffix, "application/octet-stream")
+                    return self._send(f.read_text(encoding="utf-8"), ctype)
 
                 if path == "/__token":
                     return self._send(watch_token(root), "text/plain; charset=utf-8")
@@ -1032,6 +1000,20 @@ def cmd_preview(a):
                     f = root / "assets" / "regions.js"
                     return self._send(f.read_text() if f.exists() else "",
                                       "application/javascript; charset=utf-8")
+
+                if path == "/__project":
+                    return self._send_json(project_manifest(root))
+
+                if path == "/__canvas":
+                    file_id = (qs.get("file") or [""])[0]
+                    try:
+                        target = resolve_deck_file(root, file_id)
+                    except PermissionError:
+                        return self._send_json({"error": "path not allowed"}, 403)
+                    if not target.exists():
+                        return self._send_json({"error": "file not found"}, 404)
+                    html = inject_canvas(target.read_text(encoding="utf-8"), file_id, load_bridge())
+                    return self._send(html)
 
                 if path == "/__deck":
                     try:
@@ -1051,8 +1033,6 @@ def cmd_preview(a):
 
                 if path == "/__download":
                     html, _ = render_deck(root, clean=True)
-                    # HTTP 헤더는 latin-1 이라 한글 제목을 그대로 넣으면 응답이 깨진다.
-                    # ASCII 대체 이름 + RFC 5987 로 한글 이름을 함께 보낸다.
                     import datetime
                     stamp = datetime.datetime.now().strftime("%m-%d %H%M")
                     title = f'{c.get("title", root.name)} ({stamp})'
@@ -1063,10 +1043,132 @@ def cmd_preview(a):
                                       {"Content-Disposition":
                                        f'attachment; filename="{ascii_name}.html"; '
                                        f"filename*=UTF-8''{utf8}.html"})
-            except (Exception, SystemExit) as e:  # 서버가 죽으면 비개발자는 손을 못 쓴다
+            except (Exception, SystemExit) as e:
                 return self._send(f"<pre>{e}</pre>", "text/html; charset=utf-8")
 
             return super().do_GET()
+
+        def do_PATCH(self):
+            if not self._check_local():
+                return
+            path = urllib.parse.urlparse(self.path).path
+            try:
+                body = read_json_body(self)
+            except Exception as e:
+                return self._send_json({"error": str(e)}, 400)
+
+            try:
+                if path == "/__edit":
+                    return self._patch_edit(body)
+                if path == "/__theme":
+                    return self._patch_theme(body)
+                return self._send_json({"error": "not found"}, 404)
+            except html_patch.PatchError as e:
+                status = {
+                    "not_found": 404,
+                    "duplicate": 400,
+                    "non_leaf": 400,
+                    "malformed": 400,
+                    "bad_request": 400,
+                    "bad_style": 400,
+                    "bad_text": 400,
+                    "bad_token": 400,
+                    "no_text": 400,
+                }.get(e.code, 400)
+                return self._send_json({"error": str(e), "code": e.code}, status)
+            except PermissionError as e:
+                return self._send_json({"error": str(e)}, 403)
+            except Exception as e:
+                return self._send_json({"error": str(e)}, 500)
+
+        def do_POST(self):
+            if not self._check_local():
+                return
+            path = urllib.parse.urlparse(self.path).path
+            try:
+                body = read_json_body(self)
+            except Exception as e:
+                return self._send_json({"error": str(e)}, 400)
+            if path != "/__slides/from-template":
+                return self._send_json({"error": "not found"}, 404)
+            try:
+                tpl_id = body.get("templateId") or ""
+                src = resolve_deck_file(root, tpl_id)
+                if not tpl_id.startswith("templates/") or not src.exists():
+                    return self._send_json({"error": "template not found"}, 404)
+                existing = slides_of(root)
+                no = f"{len(existing) + 1:02d}"
+                stem = re.sub(r"\.html$", "", src.name)
+                dest = root / "slides" / f"{no}-{stem}.html"
+                html = src.read_text(encoding="utf-8")
+                title = slide_title_of(src)
+                html = re.sub(r'data-slide="[^"]*"', f'data-slide="{no}"', html, count=1)
+                html = re.sub(
+                    r'<span class="s-num">[^<]*</span>',
+                    f'<span class="s-num">{no}</span>',
+                    html, count=1)
+                html_patch.atomic_write(dest, html)
+                return self._send_json({
+                    "fileId": f"slides/{dest.name}",
+                    "title": title,
+                    "revision": html_patch.file_revision(dest),
+                    "token": watch_token(root),
+                })
+            except PermissionError as e:
+                return self._send_json({"error": str(e)}, 403)
+            except Exception as e:
+                return self._send_json({"error": str(e)}, 500)
+
+        def _patch_edit(self, body):
+            file_id = body.get("fileId") or ""
+            base_rev = body.get("baseRevision") or ""
+            target = body.get("target") or {}
+            changes = body.get("changes") or {}
+            path = resolve_deck_file(root, file_id)
+            if not path.exists():
+                return self._send_json({"error": "file not found"}, 404)
+            cur = html_patch.file_revision(path)
+            if base_rev != cur:
+                return self._send_json({
+                    "error": "revision conflict",
+                    "revision": cur,
+                    "reason": "file changed externally",
+                }, 409)
+            region = target.get("region")
+            part = target.get("part")
+            if not region:
+                return self._send_json({"error": "region required"}, 400)
+            html = path.read_text(encoding="utf-8")
+            new_html = html_patch.apply_html_patch(html, region, part, changes)
+            html_patch.atomic_write(path, new_html)
+            return self._send_json({
+                "ok": True,
+                "revision": html_patch.file_revision(path),
+                "token": watch_token(root),
+            })
+
+        def _patch_theme(self, body):
+            theme = root / "assets" / "theme.css"
+            if not theme.exists():
+                return self._send_json({"error": "theme.css missing"}, 404)
+            base_rev = body.get("baseRevision") or ""
+            cur = html_patch.file_revision(theme)
+            if base_rev != cur:
+                return self._send_json({
+                    "error": "revision conflict",
+                    "revision": cur,
+                    "reason": "theme changed externally",
+                }, 409)
+            changes = body.get("changes") or {}
+            css = theme.read_text(encoding="utf-8")
+            new_css = html_patch.apply_theme_patch(css, changes)
+            html_patch.atomic_write(theme, new_css)
+            return self._send_json({
+                "ok": True,
+                "revision": html_patch.file_revision(theme),
+                "palette": html_patch.read_theme_tokens(new_css),
+                "token": watch_token(root),
+            })
 
     class Server(socketserver.ThreadingTCPServer):
         allow_reuse_address = True
@@ -1085,8 +1187,8 @@ def cmd_preview(a):
 
     url = f"http://127.0.0.1:{port}/"
     n = len(slides_of(root))
-    print(f"[slidecraft] 미리보기: {url}   ({c.get('title', root.name)} · {n}장)", flush=True)
-    print("  파일을 고치면 브라우저가 알아서 새로고침한다. 'HTML 저장' 버튼으로 완성본을 내려받는다.",
+    print(f"[slidecraft] 시각 편집기: {url}   ({c.get('title', root.name)} · {n}장)", flush=True)
+    print("  영역을 클릭해 고치면 원본 HTML/테마 파일이 저장된다. 'HTML 저장'으로 공유본을 받는다.",
           flush=True)
     print("  멈추려면 Ctrl+C.", flush=True)
 
@@ -1158,7 +1260,7 @@ def main():
     p = sub.add_parser("decks", help="만들어 둔 덱 목록 (저장하지 않고 훑는다)")
     p.add_argument("--json", action="store_true"); p.set_defaults(fn=cmd_decks)
 
-    p = sub.add_parser("preview", help="라이브 미리보기 서버 (브라우저 자동 실행 · 자동 새로고침)")
+    p = sub.add_parser("preview", help="라이브 시각 편집기 (브라우저 자동 실행 · 자동 새로고침)")
     p.add_argument("deck"); p.add_argument("--port", type=int, default=7373)
     p.add_argument("--no-open", action="store_true", help="브라우저를 열지 않는다")
     p.set_defaults(fn=cmd_preview)

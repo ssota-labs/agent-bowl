@@ -1,6 +1,9 @@
 {
   "title": "ADR",
-  "pages": ["index"],
+  "pages": [
+    "index",
+    "adr-same-origin-iframe-canvas-with-file-patch-api"
+  ],
   "pagesIndex": "index",
   "collapsible": true,
   "defaultOpen": false

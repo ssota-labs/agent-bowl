@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>슬라이드 편집기</title>
+<link rel="stylesheet" href="/__editor/shell.css">
+</head>
+<body>
+<div id="app">
+  <aside id="nav">
+    <div class="nav-head">
+      <strong id="deck-title">덱</strong>
+      <span id="nav-meta" class="muted"></span>
+    </div>
+    <div class="tabs">
+      <button type="button" data-tab="slides" class="on">슬라이드</button>
+      <button type="button" data-tab="templates">템플릿</button>
+      <button type="button" data-tab="palette">팔레트</button>
+    </div>
+    <div id="list-slides" class="list"></div>
+    <div id="list-templates" class="list" hidden></div>
+    <div id="palette-pane" class="palette" hidden></div>
+  </aside>
+
+  <main id="main">
+    <div id="canvas-wrap">
+      <iframe id="canvas" title="슬라이드 캔버스" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+    <div id="status">
+      <span id="dot"></span>
+      <span id="live-label">자동 새로고침 켜짐</span>
+      <span id="sel-label" class="muted"></span>
+    </div>
+  </main>
+
+  <aside id="inspector" hidden>
+    <div id="insp-empty" class="empty" hidden>영역을 클릭하면 속성이 여기에 나옵니다.</div>
+    <div id="insp-body" hidden>
+      <header class="insp-head">
+        <div id="insp-addr"></div>
+        <div id="insp-meta" class="muted"></div>
+      </header>
+      <section>
+        <h3>내용</h3>
+        <label class="field">텍스트
+          <textarea id="f-text" rows="3"></textarea>
+        </label>
+        <p id="text-hint" class="hint" hidden></p>
+      </section>
+      <section>
+        <h3>모양</h3>
+        <div class="grid">
+          <label class="field">글자색 <input id="f-color" type="text" placeholder="#14181d"></label>
+          <label class="field">배경색 <input id="f-bg" type="text" placeholder="transparent"></label>
+          <label class="field">글자 크기 <input id="f-fs" type="text" placeholder="19px"></label>
+          <label class="field">굵기 <input id="f-fw" type="text" placeholder="400"></label>
+          <label class="field">정렬
+            <select id="f-ta">
+              <option value="">(상속)</option>
+              <option value="left">left</option>
+              <option value="center">center</option>
+              <option value="right">right</option>
+            </select>
+          </label>
+          <label class="field">모서리 <input id="f-br" type="text" placeholder="12px"></label>
+        </div>
+      </section>
+      <section>
+        <h3>크기·간격</h3>
+        <div class="grid">
+          <label class="field">width <input id="f-w" type="text"></label>
+          <label class="field">height <input id="f-h" type="text"></label>
+          <label class="field">padding <input id="f-pad" type="text"></label>
+          <label class="field">gap <input id="f-gap" type="text"></label>
+        </div>
+      </section>
+      <div class="insp-actions">
+        <button type="button" id="b-apply" class="primary">적용</button>
+        <button type="button" id="b-clear-style">로컬 스타일 지우기</button>
+      </div>
+      <p id="insp-err" class="err" hidden></p>
+    </div>
+  </aside>
+</div>
+
+<div id="bar">
+  <button type="button" id="b-undo" title="실행 취소 (⌘Z)">실행 취소</button>
+  <button type="button" id="b-redo" title="다시 실행 (⇧⌘Z)">다시 실행</button>
+  <span class="sep"></span>
+  <button type="button" id="b-sel" aria-pressed="false" title="영역에 번호·색·이름 배지 (S)">선택 모드</button>
+  <button type="button" id="b-grid" aria-pressed="false" title="위치 격자 (G)">격자</button>
+  <span class="sep"></span>
+  <button type="button" id="b-add-slide" hidden>템플릿으로 슬라이드 추가</button>
+  <span class="grow"></span>
+  <button type="button" id="b-save" class="primary">HTML 저장</button>
+  <button type="button" id="b-pdf">PDF 저장</button>
+</div>
+<div id="toast" hidden></div>
+
+<script src="/__editor/shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>KPI 요약</title>
+<link rel="stylesheet" href="../assets/deck.css">
+<link rel="stylesheet" href="../assets/theme.css">
+<link rel="stylesheet" href="../assets/regions.css">
+</head>
+<body>
+
+<section class="slide" data-slide="02" data-title="KPI 요약">
+
+  <header class="s-head" data-region="header" data-label="상단 헤더">
+    <div>
+      <p class="t-eyebrow" data-part="eyebrow">REVIEW</p>
+      <h2 class="t-head" data-part="title">KPI 요약</h2>
+    </div>
+    <span class="s-num">02</span>
+  </header>
+
+  <div class="grid-3">
+    <div class="card edge" data-region="kpi-a" data-label="KPI 카드 A">
+      <p class="t-cap" data-part="label">지표 A</p>
+      <p class="t-kpi" data-part="value">100</p>
+      <p class="t-small" data-part="delta">전년 대비 <b class="em">+10%</b></p>
+    </div>
+    <div class="card edge" data-region="kpi-b" data-label="KPI 카드 B">
+      <p class="t-cap" data-part="label">지표 B</p>
+      <p class="t-kpi" data-part="value">200</p>
+      <p class="t-small" data-part="delta">신규 <b class="em">+20</b></p>
+    </div>
+    <div class="card edge" data-region="kpi-c" data-label="KPI 카드 C">
+      <p class="t-cap" data-part="label">지표 C</p>
+      <p class="t-kpi" data-part="value">3.0%</p>
+      <p class="t-small" data-part="delta">목표 대비 <b class="em">-0.5%p</b></p>
+    </div>
+  </div>
+
+  <div class="row fill">
+    <div class="card fill" data-region="chart" data-label="차트 영역">
+      <p class="t-cap" data-part="label">추이</p>
+      <div class="bars fill">
+        <div class="b"><i style="--v:40%"></i><span>Q1</span></div>
+        <div class="b"><i style="--v:55%"></i><span>Q2</span></div>
+        <div class="b"><i style="--v:70%"></i><span>Q3</span></div>
+        <div class="b on"><i style="--v:88%"></i><span>Q4</span></div>
+      </div>
+    </div>
+    <div class="card brand fill" data-region="insight" data-label="핵심 인사이트" style="width:360px">
+      <p class="t-head" style="font-size:20px" data-part="title">한 줄 인사이트</p>
+      <p class="t-small" data-part="body">설명 문구를 입력하세요.</p>
+    </div>
+  </div>
+
+  <footer class="s-foot" data-region="footer" data-label="하단 푸터">
+    <span data-part="deck">덱</span>
+    <span data-part="source">출처: —</span>
+  </footer>
+
+</section>
+
+<script src="../assets/regions.js"></script>
+</body>
+</html>
